@@ -1,0 +1,5 @@
+*.swp
+*.old
+tags
+
+nvim/plugged
