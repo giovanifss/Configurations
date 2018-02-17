@@ -10,3 +10,6 @@ ln -s "$(pwd)/xmobar/xmobarrc" "$HOME/.xmobarrc"
 cat xmonad/masked-xmonad.hs | sed -e 's|<XMOBAR-BIN>|'"$(which xmobar)"'|g' | sed -e "s|<XMOBAR-RC>|$HOME/.xmobarrc|g" > xmonad/xmonad.hs
 mkdir -p "$HOME/.xmonad"
 ln -s "$(pwd)/xmonad/xmonad.hs" "$HOME/.xmonad/xmonad.hs"
+
+# Urxvt configuration
+ln -s "$(pwd)/urxvt/urxvt.conf" "$HOME/.Xdefaults"
