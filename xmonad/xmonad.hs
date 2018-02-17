@@ -28,6 +28,6 @@ myModMask     = mod4Mask -- Win key or Super_L
 myBorderWidth = 1
 
 myNormalBorderColor   = "black"
-myFocusedBorderColor  = "#4693D8"
+myFocusedBorderColor  = "#404040"
 myFocusFollowsMouse   = False
 myClickJustFocuses    = False
