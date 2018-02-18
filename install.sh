@@ -2,6 +2,9 @@
 
 projects="path/to/projects"
 
+# Xorg configuration
+ln -s "$(pwd)/xorg/xsessionrc" "$HOME/.xsessionrc"
+
 # Neovim configuration
 sed -i -e 's|<CODE-PROJECTS>|'"$projects"'|g' nvim/plugins/fzf-proj.vimrc
 ln -s "$(pwd)/nvim" "$HOME/.config/nvim"
