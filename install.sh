@@ -16,3 +16,7 @@ ln -s "$(pwd)/xmonad/xmonad.hs" "$HOME/.xmonad/xmonad.hs"
 
 # Urxvt configuration
 ln -s "$(pwd)/urxvt/urxvt.conf" "$HOME/.Xdefaults"
+
+# Zshell configuration
+sed -i -e 's|<HOME-DIR>|'"$HOME"'|g' zsh/zshrc
+ln -s "$(pwd)/zsh/zshrc" "$HOME/.zshrc"
