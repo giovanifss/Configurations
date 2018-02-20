@@ -23,3 +23,6 @@ ln -s "$(pwd)/urxvt/urxvt.conf" "$HOME/.Xdefaults"
 # Zshell configuration
 sed -i -e 's|<HOME-DIR>|'"$HOME"'|g' zsh/zshrc
 ln -s "$(pwd)/zsh/zshrc" "$HOME/.zshrc"
+
+# Terminator configuration
+ln -s "$(pwd)/terminator" "$HOME/.config/terminator"
