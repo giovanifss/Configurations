@@ -23,7 +23,7 @@ main = do
     , focusedBorderColor    = myFocusedBorderColor
     }
 
-myTerminal    = "urxvt"
+myTerminal    = "terminator"
 myModMask     = mod4Mask -- Win key or Super_L
 myBorderWidth = 1
 
