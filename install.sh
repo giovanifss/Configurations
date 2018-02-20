@@ -2,27 +2,87 @@
 
 projects="path/to/projects"
 
-# Xorg configuration
-ln -s "$(pwd)/xorg/xsessionrc" "$HOME/.xsessionrc"
+function create_symlink () {
+  local origin_path="$1"
+  local dest_path="$2"
 
-# Neovim configuration
-sed -i -e 's|<CODE-PROJECTS>|'"$projects"'|g' nvim/plugins/fzf-proj.vimrc
-ln -s "$(pwd)/nvim" "$HOME/.config/nvim"
+  if [ ! -h "${dest_path}" ]; then
+    [ -e "${dest_path}" ] && mv "${dest_path}" "${dest_path}.bkp"    # Backup file if exists
+    echo "--> Creating symlink '${dest_path} -> ${origin_path}'"
+    ln -s "${origin_path}" "${dest_path}"
+  else
+    echo ":: Symlink ${dest_path} already exists"
+  fi
+}
 
-# Xmobar configuration
-ln -s "$(pwd)/xmobar/xmobarrc" "$HOME/.xmobarrc"
+function setup_xorg () {
+  local current_dir="$1"
+  local from="${current_dir}/xorg/xsessionrc"
+  local to="$HOME/.xsessionrc"
+  create_symlink "${from}" "${to}"
+}
 
-# Xmonad configuration
-sed -i -e 's|<XMOBAR-BIN>|'"$(which xmobar)"'|g' -e "s|<XMOBAR-RC>|$HOME/.xmobarrc|g" xmonad/xmonad.hs
-mkdir -p "$HOME/.xmonad"
-ln -s "$(pwd)/xmonad/xmonad.hs" "$HOME/.xmonad/xmonad.hs"
+function setup_neovim () {
+  local current_dir="$1"
+  local from="${current_dir}/nvim"
+  local to="$HOME/.config/nvim"
 
-# Urxvt configuration
-ln -s "$(pwd)/urxvt/urxvt.conf" "$HOME/.Xdefaults"
+  echo "--> Updating fzf-proj.vimrc"
+  sed -i -e 's|<CODE-PROJECTS>|'"$projects"'|g' nvim/plugins/fzf-proj.vimrc
+  create_symlink "${from}" "${to}"
+}
 
-# Zshell configuration
-sed -i -e 's|<HOME-DIR>|'"$HOME"'|g' zsh/zshrc
-ln -s "$(pwd)/zsh/zshrc" "$HOME/.zshrc"
+function setup_xmobar () {
+  local current_dir="$1"
+  local from="${current_dir}/xmobar/xmobarrc"
+  local to="$HOME/.xmobarrc"
+  create_symlink "${from}" "${to}"
+}
 
-# Terminator configuration
-ln -s "$(pwd)/terminator" "$HOME/.config/terminator"
+function setup_xmonad () {
+  local current_dir="$1"
+  local from="${current_dir}/xmonad/xmonad.hs"
+  local to="$HOME/.xmonad/xmonad.hs"
+
+  echo "--> Updating xmonad.hs"
+  sed -i -e 's|<XMOBAR-BIN>|'"$(which xmobar)"'|g' -e "s|<XMOBAR-RC>|$HOME/.xmobarrc|g" xmonad/xmonad.hs
+  mkdir -p "$HOME/.xmonad"
+  create_symlink "${from}" "${to}"
+}
+
+function setup_urxvt () {
+  local current_dir="$1"
+  local from="${current_dir}/urxvt/urxvt.conf"
+  local to="$HOME/.Xdefaults"
+  create_symlink "${from}" "${to}"
+}
+
+function setup_zsh () {
+  local current_dir="$1"
+  local from="${current_dir}/zsh/zshrc"
+  local to="$HOME/.zshrc"
+
+  echo "--> Updating zshrc"
+  sed -i -e 's|<HOME-DIR>|'"$HOME"'|g' zsh/zshrc
+  create_symlink "${from}" "${to}"
+}
+
+function setup_terminator () {
+  local current_dir="$1"
+  local from="${current_dir}/terminator"
+  local to="$HOME/.config/terminator"
+  create_symlink "${from}" "${to}"
+}
+
+function main () {
+  local pwd
+  pwd="$(pwd)"
+
+  setup_xorg "${pwd}"
+  setup_neovim "${pwd}"
+  setup_xmobar "${pwd}"
+  setup_xmonad "${pwd}"
+  setup_urxvt "${pwd}"
+  setup_zsh "${pwd}"
+  setup_terminator "${pwd}"
+}
