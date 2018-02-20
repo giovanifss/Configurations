@@ -34,8 +34,12 @@ function setup_neovim () {
 
 function setup_xmobar () {
   local current_dir="$1"
+  local interface="$(ip addr | grep '[0-9]: .*: ' | cut -d ' ' -f2 | cut -d ':' -f1 | grep -v "lo")"
   local from="${current_dir}/xmobar/xmobarrc"
   local to="$HOME/.xmobarrc"
+
+  echo "--> Updating xmobarrc"
+  sed -i -e 's|<IF-1>|'"${interface}"'|g' xmobar/xmobarrc
   create_symlink "${from}" "${to}"
 }
 
@@ -86,3 +90,5 @@ function main () {
   setup_zsh "${pwd}"
   setup_terminator "${pwd}"
 }
+
+main
