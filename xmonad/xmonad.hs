@@ -3,9 +3,6 @@ import XMonad.Config.Desktop
 import XMonad.Hooks.ManageDocks
 import XMonad.Util.Run(spawnPipe)
 import qualified XMonad.Hooks.DynamicBars as Bars
-import qualified XMonad.Actions.CopyWindow as CopyW
-import qualified XMonad.Hooks.DynamicLog as DLog
-import qualified XMonad.Hooks.WorkspaceHistory as WH
 
 import System.IO
 
@@ -15,10 +12,6 @@ main = do
     , layoutHook = avoidStruts  $  layoutHook defaultConfig
     , startupHook = do
         Bars.dynStatusBarStartup xmobarCreator xmobarDestroyer
-    , logHook = do
-        copies <- CopyW.wsContainingCopies
-        WH.workspaceHistoryHook
-        Bars.multiPP (myLogPPActive copies) (myLogPP copies)
     , handleEventHook = Bars.dynStatusBarEventHook xmobarCreator xmobarDestroyer
     , terminal              = myTerminal
     , modMask               = myModMask
@@ -44,14 +37,3 @@ xmobarCreator (S sid) = spawnPipe $ "<XMOBAR-BIN> <XMOBAR-RC> --screen " ++ show
 
 xmobarDestroyer :: Bars.DynamicStatusBarCleanup
 xmobarDestroyer = return ()
-
-myLogPP :: [WorkspaceId] -> DLog.PP
-myLogPP copies = DLog.defaultPP
-
-myLogPPActive :: [WorkspaceId] -> DLog.PP
-myLogPPActive copies = (myLogPP copies)
-  { DLog.ppCurrent = DLog.xmobarColor myCurrentBG myNormalFG . DLog.pad
-  }
-
-myCurrentBG = "#888888"
-myNormalFG = "#ffffff"
