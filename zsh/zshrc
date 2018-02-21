@@ -60,3 +60,15 @@ setopt HIST_BEEP
 
 # Aliases
 alias ls="ls --color=auto"
+
+# Prompt configuration
+trap 'echo -n "$(tput sgr0)"' DEBUG
+
+autoload -U colors && colors
+makeprompt() {
+  printf "%s%$(($COLUMNS-47))s\n%s" \
+    "%B%(?.%{$fg[green]%}[✔]%{$reset_color%}%B.%{$fg[red]%}[✖]%{$reset_color%}%B) %n@%m %{$fg[blue]%}(%~)%{$reset_color%}%B" \
+    "%D{%c}" \
+    "(%!) %{$fg[blue]%}%(!.#.$) "
+}
+PS1="$(makeprompt)"
