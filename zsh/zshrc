@@ -64,13 +64,22 @@ alias ls="ls --color=auto"
 # Prompt configuration
 autoload -U colors && colors
 function makeprompt() {
-  local homesize=$(print -Pn "%s" "%~" | sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[mGK]//g")
-  printf "%s%$(($COLUMNS-(50+${#homesize})))s\n%s" \
+  printf "%s\n%s" \
     "%B%(?.%{$fg[green]%}[✔]%{$reset_color%}%B.%{$fg[red]%}[✖]%{$reset_color%}%B) %n@%m %{$fg[blue]%}(%~)%{$reset_color%}%B" \
-    "%D{%c}" \
     "(%!) %{$fg[blue]%}%(!.#.$)%{$reset_color%}%b "
 }
+export PS1="$(makeprompt)"
 
-function precmd() {
-  export PS1="$(makeprompt)"
+# Prompt vim
+function zle-line-init zle-keymap-select {
+  VIM_PROMPT="%{$fg_bold[green]%} [% NORMAL]%{$reset_color%}"
+  RPS1="%{$(echotc UP 1)%}%B%D{%c}%b${${KEYMAP/vicmd/$VIM_PROMPT}/(main|viins)/}%{$(echotc DO 1)%}"
+  zle reset-prompt
 }
+
+zle -N zle-line-init
+zle -N zle-keymap-select
+
+# Key bindinng (VI)
+export KEYTIMEOUT=1 # Remove delay for entering/exiting modes
+bindkey '^w' backward-kill-word
