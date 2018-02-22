@@ -62,13 +62,15 @@ setopt HIST_BEEP
 alias ls="ls --color=auto"
 
 # Prompt configuration
-trap 'echo -n "$(tput sgr0)"' DEBUG
-
 autoload -U colors && colors
-makeprompt() {
-  printf "%s%$(($COLUMNS-47))s\n%s" \
+function makeprompt() {
+  local homesize=$(print -Pn "%s" "%~" | sed -r "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[mGK]//g")
+  printf "%s%$(($COLUMNS-(50+${#homesize})))s\n%s" \
     "%B%(?.%{$fg[green]%}[✔]%{$reset_color%}%B.%{$fg[red]%}[✖]%{$reset_color%}%B) %n@%m %{$fg[blue]%}(%~)%{$reset_color%}%B" \
     "%D{%c}" \
-    "(%!) %{$fg[blue]%}%(!.#.$) "
+    "(%!) %{$fg[blue]%}%(!.#.$)%{$reset_color%}%b "
 }
-PS1="$(makeprompt)"
+
+function precmd() {
+  export PS1="$(makeprompt)"
+}
