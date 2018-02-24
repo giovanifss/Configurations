@@ -1,5 +1,4 @@
 # The following lines were added by compinstall
-
 zstyle ':completion:*' completer _expand _complete _ignored _correct _approximate
 zstyle ':completion:*' format '-> Completing %d'
 zstyle ':completion:*' list-colors ''
@@ -60,6 +59,23 @@ setopt HIST_BEEP
 
 # Aliases
 alias ls="ls --color=auto"
+alias vim="nvim"
+alias lls="ls --color=auto"
+alias ll='ls -l --color=auto'
+alias la='ls -a --color=auto'
+alias lla='ls -al --color=auto'
+alias cd..='cd ..'
+alias l='ls --color=auto'
+alias s='ls --color=auto'
+alias lls='ls --color=auto'
+alias stop='sudo systemctl stop'
+alias start='sudo systemctl start'
+alias status='sudo systemctl status'
+alias disable='sudo systemctl disable'
+alias enable='sudo systemctl enable'
+alias restart='sudo systemctl restart'
+alias pacman="sudo pacman"
+alias quit='exit'
 
 # Prompt configuration
 autoload -U colors && colors
@@ -83,3 +99,6 @@ zle -N zle-keymap-select
 # Key bindinng (VI)
 export KEYTIMEOUT=1 # Remove delay for entering/exiting modes
 bindkey '^w' backward-kill-word
+
+# When using !!,!$,etc. the command will wait, not execute right away
+setopt no_hist_verify
