@@ -35,11 +35,11 @@ function setup_neovim () {
 function setup_xmobar () {
   local current_dir="$1"
   local interface="$(ip addr | grep '[0-9]: .*: ' | cut -d ' ' -f2 | cut -d ':' -f1 | grep -v "lo")"
-  local from="${current_dir}/xmobar/xmobarrc"
+  local from="${current_dir}/xmobar/xmobarrc.hs"
   local to="$HOME/.xmobarrc"
 
-  echo "--> Updating xmobarrc"
-  sed -i -e 's|<IF-1>|'"${interface}"'|g' xmobar/xmobarrc
+  echo "--> Updating xmobarrc.hs"
+  sed -i -e 's|<IF-1>|'"${interface}"'|g' xmobar/xmobarrc.hs
   create_symlink "${from}" "${to}"
 }
 
