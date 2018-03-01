@@ -6,10 +6,12 @@ import XMonad.Actions.GridSelect (goToSelected, defaultGSConfig)
 import qualified Data.Map as M
 import qualified XMonad.StackSet as W
 import qualified XMonad.Hooks.DynamicBars as Bars
+import qualified XMonad.Layout.IndependentScreens as IS
 
 import System.IO
 
 main = do
+  nScreens <- IS.countScreens
   xmonad $ docks $ desktopConfig
     { manageHook = manageDocks <+> manageHook defaultConfig
     , layoutHook = avoidStruts  $  layoutHook defaultConfig
@@ -23,6 +25,7 @@ main = do
     , clickJustFocuses      = myClickJustFocuses
     , normalBorderColor     = myNormalBorderColor
     , focusedBorderColor    = myFocusedBorderColor
+    , workspaces            = IS.withScreens nScreens (map show [1..9])
     , keys                  = myKeys
     }
 
@@ -51,12 +54,12 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
   , ((modm, xK_t), withFocused $ windows . W.sink)                              -- Push window back into tiling
   ]
   ++
-  [((m .|. modm, k), windows $ f i)                                             -- mod-shift-[1..9], Move client to workspace N
-    | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]                     -- mod-[1..9], Switch to workspace N
-  , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
+  [((m .|. modm, k), windows $ IS.onCurrentScreen f i)
+      | (i, k) <- zip (IS.workspaces' conf) [xK_1 .. xK_9]                      -- mod-shift-[1..9], Move client to workspace N in focused screen
+      , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]                    -- mod-[1..9], Switch to workspace N in focused screen
   ++
   [((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))      -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
-    | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]                                 -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
-  , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
+      | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]                               -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
+      , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
   ++
   [((modm, xK_g), goToSelected defaultGSConfig)]                                -- GridSelect
