@@ -6,6 +6,7 @@ import XMonad.Actions.GridSelect (goToSelected, defaultGSConfig)
 import qualified Data.Map as M
 import qualified XMonad.StackSet as W
 import qualified XMonad.Hooks.DynamicBars as Bars
+import qualified Graphics.X11.ExtraTypes.XF86 as XF86
 import qualified XMonad.Layout.IndependentScreens as IS
 
 import System.IO
@@ -52,6 +53,12 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
   , ((modm, xK_k), windows W.focusUp)                                           -- Move focus to the previous window
   , ((modm, xK_j), windows W.focusDown)                                         -- Move focus to the next window
   , ((modm, xK_t), withFocused $ windows . W.sink)                              -- Push window back into tiling
+  ]
+  ++
+  [ ((0, XF86.xF86XK_AudioPlay), spawn "playerctl play-pause")                  -- Play/Pause media
+  , ((0, XF86.xF86XK_AudioPause), spawn "playerctl play-pause")                 -- Play/Pause media
+  , ((0, XF86.xF86XK_AudioNext), spawn "playerctl next")                        -- Jump to next media
+  , ((0, XF86.xF86XK_AudioPrev), spawn "playerctl previous")                    -- Jump to previous media
   ]
   ++
   [((m .|. modm, k), windows $ IS.onCurrentScreen f i)
