@@ -1,14 +1,17 @@
+import System.IO
+import qualified Data.Map as M
+
 import XMonad
 import XMonad.Config.Desktop
 import XMonad.Hooks.ManageDocks
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Actions.GridSelect (goToSelected, defaultGSConfig)
-import qualified Data.Map as M
 import qualified XMonad.StackSet as W
+import qualified XMonad.Hooks.DynamicLog as DLog
 import qualified XMonad.Hooks.DynamicBars as Bars
+import qualified XMonad.Actions.CopyWindow as CopyW
+import qualified XMonad.Hooks.WorkspaceHistory as WH
 import qualified XMonad.Layout.IndependentScreens as IS
-
-import System.IO
 
 main = do
   nScreens <- IS.countScreens
@@ -18,25 +21,37 @@ main = do
     , startupHook = do
         Bars.dynStatusBarStartup xmobarCreator xmobarDestroyer
     , handleEventHook = Bars.dynStatusBarEventHook xmobarCreator xmobarDestroyer
+    , logHook = do copies <- CopyW.wsContainingCopies
+                   WH.workspaceHistoryHook
+                   Bars.multiPP (myLogPPActive copies) (myLogPP copies)
     , terminal              = myTerminal
     , modMask               = myModMask
     , borderWidth           = myBorderWidth
     , focusFollowsMouse     = myFocusFollowsMouse
     , clickJustFocuses      = myClickJustFocuses
-    , normalBorderColor     = myNormalBorderColor
-    , focusedBorderColor    = myFocusedBorderColor
+    , normalBorderColor     = black
+    , focusedBorderColor    = lightgrey
     , workspaces            = IS.withScreens nScreens (map show [1..9])
     , keys                  = myKeys
     }
 
+-- Usability --
 myTerminal    = "terminator"
-myModMask     = mod4Mask -- Win key or Super_L
+myModMask     = mod4Mask      -- Win key or Super_L
 myBorderWidth = 1
 
-myNormalBorderColor   = "black"
-myFocusedBorderColor  = "#404040"
 myFocusFollowsMouse   = False
 myClickJustFocuses    = False
+
+-- Color configuration --
+black       = "#000000"
+grey        = "#808080"
+lightgrey   = "#dddddd"
+white       = "#ffffff"
+darkred     = "#cc0000"
+orange      = "#ee9a00"
+lightgreen  = "#00c500"
+darkgreen   = "#008000"
 
 -- Xmobar multiple screens --
 xmobarCreator :: Bars.DynamicStatusBar
@@ -45,6 +60,24 @@ xmobarCreator (S sid) = spawnPipe $ "<XMOBAR-BIN> <XMOBAR-RC> --screen " ++ show
 xmobarDestroyer :: Bars.DynamicStatusBarCleanup
 xmobarDestroyer = return ()
 
+myLogPP :: [WorkspaceId] -> DLog.PP
+myLogPP copies = DLog.defaultPP
+  { DLog.ppCurrent = DLog.xmobarColor grey black . DLog.pad
+  , DLog.ppVisible = DLog.xmobarColor grey black . DLog.pad
+  , DLog.ppHidden  = DLog.xmobarColor grey black
+  , DLog.ppUrgent  = DLog.xmobarColor orange black . DLog.wrap ">" "<" . DLog.xmobarStrip
+  , DLog.ppTitle   = DLog.xmobarColor orange black . DLog.shorten 35
+  , DLog.ppLayout  = DLog.xmobarColor lightgrey black
+  , DLog.ppSep     = DLog.pad $ DLog.xmobarColor lightgrey black "|"
+  -- , DLog.ppOutput  = Run.hPutStrLn h
+  }
+
+myLogPPActive :: [WorkspaceId] -> DLog.PP
+myLogPPActive copies = (myLogPP copies)
+  { DLog.ppCurrent = DLog.xmobarColor orange black . DLog.pad
+  }
+
+-- Keybindings --
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
   [ ((modm, xK_Return), spawn $ XMonad.terminal conf)                           -- Launch terminal
   , ((modm, xK_p), spawn "exe=`dmenu_path | dmenu` && eval \"exec $exe\"")      -- Launch dmenu
