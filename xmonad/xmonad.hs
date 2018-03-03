@@ -11,6 +11,7 @@ import qualified XMonad.Hooks.DynamicLog as DLog
 import qualified XMonad.Hooks.DynamicBars as Bars
 import qualified XMonad.Actions.CopyWindow as CopyW
 import qualified XMonad.Hooks.WorkspaceHistory as WH
+import qualified Graphics.X11.ExtraTypes.XF86 as XF86
 import qualified XMonad.Layout.IndependentScreens as IS
 
 main = do
@@ -52,6 +53,7 @@ darkred     = "#cc0000"
 orange      = "#ee9a00"
 lightgreen  = "#00c500"
 darkgreen   = "#008000"
+lightblue   = "#70c4df"
 
 -- Xmobar multiple screens --
 xmobarCreator :: Bars.DynamicStatusBar
@@ -85,6 +87,12 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
   , ((modm, xK_k), windows W.focusUp)                                           -- Move focus to the previous window
   , ((modm, xK_j), windows W.focusDown)                                         -- Move focus to the next window
   , ((modm, xK_t), withFocused $ windows . W.sink)                              -- Push window back into tiling
+  ]
+  ++
+  [ ((0, XF86.xF86XK_AudioPlay), spawn "playerctl play-pause")                  -- Play/Pause media
+  , ((0, XF86.xF86XK_AudioPause), spawn "playerctl play-pause")                 -- Play/Pause media
+  , ((0, XF86.xF86XK_AudioNext), spawn "playerctl next")                        -- Jump to next media
+  , ((0, XF86.xF86XK_AudioPrev), spawn "playerctl previous")                    -- Jump to previous media
   ]
   ++
   [((m .|. modm, k), windows $ IS.onCurrentScreen f i)
