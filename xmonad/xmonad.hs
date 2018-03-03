@@ -79,17 +79,17 @@ myLogPPActive = myLogPP
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
   [ ((modm, xK_Return), spawn $ XMonad.terminal conf)                           -- Launch terminal
   , ((modm, xK_p), spawn "exe=`dmenu_path | dmenu` && eval \"exec $exe\"")      -- Launch dmenu
+  , ((modm, xK_l), spawn "physlock -d -m -p 'Everything is being recorded'")    -- Lock screen - physlock
   , ((modm, xK_c), kill)                                                        -- Close focused window
   , ((modm, xK_k), windows W.focusUp)                                           -- Move focus to the previous window
   , ((modm, xK_j), windows W.focusDown)                                         -- Move focus to the next window
-  , ((modm, xK_t), withFocused $ windows . W.sink)                              -- Push window back into tiling
-  ]
+  , ((modm, xK_t), withFocused $ windows . W.sink)]                             -- Push window back into tiling
   ++
   [ ((0, XF86.xF86XK_AudioPlay), spawn "playerctl play-pause")                  -- Play/Pause media
   , ((0, XF86.xF86XK_AudioPause), spawn "playerctl play-pause")                 -- Play/Pause media
+  , ((0, XF86.xF86XK_AudioStop), spawn "playerctl stop")                        -- Stop media
   , ((0, XF86.xF86XK_AudioNext), spawn "playerctl next")                        -- Jump to next media
-  , ((0, XF86.xF86XK_AudioPrev), spawn "playerctl previous")                    -- Jump to previous media
-  ]
+  , ((0, XF86.xF86XK_AudioPrev), spawn "playerctl previous")]                   -- Jump to previous media
   ++
   [((m .|. modm, k), windows $ IS.onCurrentScreen f i)
       | (i, k) <- zip (IS.workspaces' conf) [xK_1 .. xK_9]                      -- mod-shift-[1..9], Move client to workspace N in focused screen
