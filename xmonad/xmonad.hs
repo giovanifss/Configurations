@@ -69,9 +69,8 @@ myLogPP copies = DLog.defaultPP
   , DLog.ppHidden  = DLog.xmobarColor grey black
   , DLog.ppUrgent  = DLog.xmobarColor orange black . DLog.wrap ">" "<" . DLog.xmobarStrip
   , DLog.ppTitle   = DLog.xmobarColor orange black . DLog.shorten 25
-  , DLog.ppLayout  = DLog.xmobarColor lightgrey black
-  , DLog.ppSep     = DLog.pad $ DLog.xmobarColor lightgrey black "|"
-  -- , DLog.ppOutput  = Run.hPutStrLn h
+  , DLog.ppOrder   = \(ws:_:t:_) -> [ws,t]
+  , DLog.ppSep     = DLog.pad $ DLog.xmobarColor grey black "-"
   }
 
 myLogPPActive :: [WorkspaceId] -> DLog.PP
