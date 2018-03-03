@@ -19,6 +19,7 @@ main = do
     , layoutHook = avoidStruts  $  layoutHook defaultConfig
     , startupHook = do
         Bars.dynStatusBarStartup xmobarCreator xmobarDestroyer
+        spawn "xmodmap -e 'keysym Menu = Super_R'"    -- Make xk_menu key be xk_super
     , handleEventHook = Bars.dynStatusBarEventHook xmobarCreator xmobarDestroyer
     , logHook = Bars.multiPP myLogPPActive myLogPP
     , terminal              = myTerminal
