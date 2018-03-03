@@ -9,8 +9,6 @@ import XMonad.Actions.GridSelect (goToSelected, defaultGSConfig)
 import qualified XMonad.StackSet as W
 import qualified XMonad.Hooks.DynamicLog as DLog
 import qualified XMonad.Hooks.DynamicBars as Bars
-import qualified XMonad.Actions.CopyWindow as CopyW
-import qualified XMonad.Hooks.WorkspaceHistory as WH
 import qualified Graphics.X11.ExtraTypes.XF86 as XF86
 import qualified XMonad.Layout.IndependentScreens as IS
 
@@ -22,9 +20,7 @@ main = do
     , startupHook = do
         Bars.dynStatusBarStartup xmobarCreator xmobarDestroyer
     , handleEventHook = Bars.dynStatusBarEventHook xmobarCreator xmobarDestroyer
-    , logHook = do copies <- CopyW.wsContainingCopies
-                   WH.workspaceHistoryHook
-                   Bars.multiPP (myLogPPActive copies) (myLogPP copies)
+    , logHook = Bars.multiPP myLogPPActive myLogPP
     , terminal              = myTerminal
     , modMask               = myModMask
     , borderWidth           = myBorderWidth
@@ -62,8 +58,8 @@ xmobarCreator (S sid) = spawnPipe $ "<XMOBAR-BIN> <XMOBAR-RC> --screen " ++ show
 xmobarDestroyer :: Bars.DynamicStatusBarCleanup
 xmobarDestroyer = return ()
 
-myLogPP :: [WorkspaceId] -> DLog.PP
-myLogPP copies = DLog.defaultPP
+myLogPP :: DLog.PP
+myLogPP = DLog.xmobarPP
   { DLog.ppCurrent = DLog.xmobarColor grey black . DLog.pad
   , DLog.ppVisible = DLog.xmobarColor grey black . DLog.pad
   , DLog.ppHidden  = DLog.xmobarColor grey black
@@ -73,8 +69,8 @@ myLogPP copies = DLog.defaultPP
   , DLog.ppSep     = DLog.pad $ DLog.xmobarColor grey black "-"
   }
 
-myLogPPActive :: [WorkspaceId] -> DLog.PP
-myLogPPActive copies = (myLogPP copies)
+myLogPPActive :: DLog.PP
+myLogPPActive = myLogPP
   { DLog.ppCurrent = DLog.xmobarColor orange black . DLog.pad
   }
 
