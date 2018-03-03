@@ -31,7 +31,7 @@ main = do
     , focusFollowsMouse     = myFocusFollowsMouse
     , clickJustFocuses      = myClickJustFocuses
     , normalBorderColor     = black
-    , focusedBorderColor    = lightgrey
+    , focusedBorderColor    = grey
     , workspaces            = IS.withScreens nScreens (map show [1..9])
     , keys                  = myKeys
     }
