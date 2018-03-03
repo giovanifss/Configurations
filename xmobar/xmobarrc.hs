@@ -4,8 +4,7 @@ Config { font = "-*-Fixed-Bold-R-Normal-*-13-*-*-*-*-*-*-*"
        , bgColor = "#000000"        -- black
        , fgColor = "#dddddd"        -- lightgrey
        , position = TopW L 100
-       , commands = [ Run Weather "CYVR" ["-t","<tempC>C","-L","18","-H","25","--normal","#00c500","--high","#cc0000","--low","#70c4df"] 36000    -- lightgreen, red and lightblue
-                    , Run Network "wlp3s0" ["-L","1000","-H","2000000","--normal","#00c500","--high","#cc0000"] 10                                -- lightgreen and red
+       , commands = [ Run Network "wlp3s0" ["-L","1000","-H","2000000","--normal","#00c500","--high","#cc0000"] 10                                -- lightgreen and red
                     , Run Network "eth1" ["-L","1000","-H","2000000","--normal","#00c500","--high","#cc0000"] 10                                  -- lightgreen and red
                     , Run Cpu ["-L","20","-H","50","--normal","#00c500","--high","#cc0000"] 10                                                    -- lightgreen and red
                     , Run Memory ["-t","Mem: <usedratio>%", "-L", "30", "-H", "70", "--normal", "#00c500", "--high", "#cc0000"] 10                -- lightgreen and red
