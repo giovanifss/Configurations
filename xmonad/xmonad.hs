@@ -60,9 +60,9 @@ xmobarDestroyer :: Bars.DynamicStatusBarCleanup
 xmobarDestroyer = return ()
 
 myLogPP :: DLog.PP
-myLogPP = DLog.xmobarPP
+myLogPP = def
   { DLog.ppCurrent = DLog.xmobarColor grey black . DLog.pad
-  , DLog.ppVisible = DLog.xmobarColor grey black . DLog.pad
+  , DLog.ppVisible = \_ -> ""
   , DLog.ppHidden  = DLog.xmobarColor grey black
   , DLog.ppUrgent  = DLog.xmobarColor orange black . DLog.wrap ">" "<" . DLog.xmobarStrip
   , DLog.ppTitle   = DLog.xmobarColor orange black . DLog.shorten 25
@@ -72,8 +72,7 @@ myLogPP = DLog.xmobarPP
 
 myLogPPActive :: DLog.PP
 myLogPPActive = myLogPP
-  { DLog.ppCurrent = DLog.xmobarColor orange black . DLog.pad
-  }
+  { DLog.ppCurrent = DLog.xmobarColor orange black . DLog.pad }
 
 -- Keybindings --
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
