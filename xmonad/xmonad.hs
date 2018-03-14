@@ -5,7 +5,7 @@ import XMonad
 import XMonad.Config.Desktop
 import XMonad.Hooks.ManageDocks
 import XMonad.Util.Run(spawnPipe)
-import XMonad.Actions.GridSelect (goToSelected, defaultGSConfig)
+import XMonad.Actions.GridSelect (goToSelected)
 import qualified XMonad.StackSet as W
 import qualified XMonad.Hooks.DynamicLog as DLog
 import qualified XMonad.Hooks.DynamicBars as Bars
@@ -15,8 +15,8 @@ import qualified XMonad.Layout.IndependentScreens as IS
 main = do
   nScreens <- IS.countScreens
   xmonad $ docks $ desktopConfig
-    { manageHook = manageDocks <+> manageHook defaultConfig
-    , layoutHook = avoidStruts  $  layoutHook defaultConfig
+    { manageHook = manageDocks <+> manageHook def
+    , layoutHook = avoidStruts  $  layoutHook def
     , startupHook = do
         Bars.dynStatusBarStartup xmobarCreator xmobarDestroyer
         spawn "xmodmap -e 'keysym Menu = Super_R'"    -- Make xk_menu key be xk_super
@@ -98,4 +98,4 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
       | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]                               -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
       , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
   ++
-  [((modm, xK_g), goToSelected defaultGSConfig)]                                -- GridSelect
+  [((modm, xK_g), goToSelected def)]                                            -- GridSelect
