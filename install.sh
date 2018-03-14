@@ -17,8 +17,8 @@ function create_symlink () {
 
 function setup_xorg () {
   local current_dir="$1"
-  local from="${current_dir}/xorg/xsessionrc"
-  local to="$HOME/.xsessionrc"
+  local from="${current_dir}/xorg/xprofile"
+  local to="$HOME/.xprofile"
   create_symlink "${from}" "${to}"
 }
 
