@@ -78,6 +78,14 @@ function setup_terminator () {
   create_symlink "${from}" "${to}"
 }
 
+function setup_lightdm () {
+  local current_dir="$1"
+  local diff="${current_dir}/lightdm/lightdm.diff"
+  local to="/usr/share/xgreeters/lightdm-gtk-greeter.desktop"
+  echo "--> Updating lightmdm config at ${to}"
+  [ -w "${to}" ] && patch "${to}" "${diff}" || sudo patch "${to}" "${diff}"
+}
+
 function main () {
   local pwd
   pwd="$(pwd)"
@@ -89,6 +97,7 @@ function main () {
   setup_urxvt "${pwd}"
   setup_zsh "${pwd}"
   setup_terminator "${pwd}"
+  setup_lightdm "${pwd}"
 }
 
 main

@@ -1,0 +1,4 @@
+4c4
+< Exec=lightdm-gtk-greeter
+---
+> Exec=env GTK_THEME=Adwaita:dark lightdm-gtk-greeter
