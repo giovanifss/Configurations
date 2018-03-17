@@ -83,8 +83,12 @@ function setup_lightdm () {
   local current_dir="$1"
   local diff="${current_dir}/lightdm/lightdm.diff"
   local to="/usr/share/xgreeters/lightdm-gtk-greeter.desktop"
-  echo "--> Updating lightmdm config at ${to}"
-  [ -w "${to}" ] && patch "${to}" "${diff}" || sudo patch "${to}" "${diff}"
+  if ! patch -R -p0 -s -f --dry-run "${to}" "${diff}" &>/dev/null; then
+    echo "--> Updating lightmdm config at ${to}"
+    [ -w "${to}" ] && patch "${to}" "${diff}" -s &>/dev/null || sudo patch "${to}" "${diff}" -s &>/dev/null
+  else
+    echo ":: Lightdm already patched"
+  fi
 }
 
 function main () {
