@@ -79,7 +79,19 @@ function setup_terminator () {
   create_symlink "${from}" "${to}"
 }
 
-function setup_lightdm () {
+function setup_lightdm_bg () {
+  local current_dir="$1"
+  local bgfrom="$(ls $HOME/Pictures/wallpapers/bg-lightdm.*)"
+  local bgdest="/usr/share/pixmaps"
+  local cfgfrom="${current_dir}/lightdm/lightdm-gtk-greeter.conf"
+  local cfgdest="/etc/lightdm/lightdm-gtk-greeter.conf"
+  echo "--> Copying lightdm background image"
+  [ -w "${bgdest}" ] && cp "${bgfrom}" "${bgdest}" || sudo cp "${bgfrom}" "${bgdest}"
+  echo "--> Updating lightdm configuration file"
+  [ -w "${cfgdest}" ] && cp "${cfgfrom}" "${cfgdest}" || sudo cp "${cfgfrom}" "${cfgdest}"
+}
+
+function setup_lightdm_cfg () {
   local current_dir="$1"
   local diff="${current_dir}/lightdm/lightdm.diff"
   local to="/usr/share/xgreeters/lightdm-gtk-greeter.desktop"
@@ -89,6 +101,12 @@ function setup_lightdm () {
   else
     echo ":: Lightdm already patched"
   fi
+}
+
+function setup_lightdm () {
+  local current_dir="$1"
+  setup_lightdm_bg "${current_dir}"
+  setup_lightdm_cfg "${current_dir}"
 }
 
 function main () {
