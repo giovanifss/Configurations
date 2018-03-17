@@ -68,6 +68,7 @@ function setup_zsh () {
 
   echo "--> Updating zshrc"
   sed -i -e 's|<HOME-DIR>|'"$HOME"'|g' zsh/zshrc
+  sed -i -e 's|<CODE-PROJECTS>|'"$projects"'|g' zsh/zshrc
   create_symlink "${from}" "${to}"
 }
 

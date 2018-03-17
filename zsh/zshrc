@@ -4,7 +4,7 @@ zstyle ':completion:*' format '-> Completing %d'
 zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' matcher-list 'm:{[:lower:]}={[:upper:]}' '' '' ''
 zstyle ':completion:*' original true
-zstyle :compinstall filename '/home/giovanifss/.zshrc'
+zstyle :compinstall filename '<HOME-DIR>/.zshrc'
 
 autoload -Uz compinit
 compinit
@@ -76,6 +76,7 @@ alias enable='sudo systemctl enable'
 alias restart='sudo systemctl restart'
 alias pacman="sudo pacman"
 alias quit='exit'
+alias gocfg='cd <CODE-PROJECTS>/configs'
 
 # Prompt configuration
 autoload -U colors && colors
