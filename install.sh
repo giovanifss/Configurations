@@ -15,10 +15,10 @@ function create_symlink () {
   fi
 }
 
-function setup_xorg () {
+function setup () {
   local current_dir="$1"
-  local from="${current_dir}/xorg/xprofile"
-  local to="$HOME/.xprofile"
+  local from="${current_dir}/$2"
+  local to="$3"
   create_symlink "${from}" "${to}"
 }
 
@@ -54,13 +54,6 @@ function setup_xmonad () {
   create_symlink "${from}" "${to}"
 }
 
-function setup_urxvt () {
-  local current_dir="$1"
-  local from="${current_dir}/urxvt/urxvt.conf"
-  local to="$HOME/.Xdefaults"
-  create_symlink "${from}" "${to}"
-}
-
 function setup_zsh () {
   local current_dir="$1"
   local from="${current_dir}/zsh/zshrc"
@@ -69,13 +62,6 @@ function setup_zsh () {
   echo "--> Updating zshrc"
   sed -i -e 's|<HOME-DIR>|'"$HOME"'|g' zsh/zshrc
   sed -i -e 's|<CODE-PROJECTS>|'"$projects"'|g' zsh/zshrc
-  create_symlink "${from}" "${to}"
-}
-
-function setup_terminator () {
-  local current_dir="$1"
-  local from="${current_dir}/terminator"
-  local to="$HOME/.config/terminator"
   create_symlink "${from}" "${to}"
 }
 
@@ -113,13 +99,13 @@ function main () {
   local pwd
   pwd="$(pwd)"
 
-  setup_xorg "${pwd}"
+  setup "${pwd}" "xorg/xprofile" "$HOME/.xprofile"        # Setup xprofile
+  setup "${pwd}" "urxvt/urxvt.conf" "$HOME/.Xdefaults"    # Setup urxvt
+  setup "${pwd}" "terminator" "$HOME/.config/terminator"  # Setup terminator
   setup_neovim "${pwd}"
   setup_xmobar "${pwd}"
   setup_xmonad "${pwd}"
-  setup_urxvt "${pwd}"
   setup_zsh "${pwd}"
-  setup_terminator "${pwd}"
   setup_lightdm "${pwd}"
 }
 
