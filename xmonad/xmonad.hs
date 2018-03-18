@@ -3,8 +3,10 @@ import qualified Data.Map as M
 
 import XMonad
 import XMonad.Config.Desktop
+import XMonad.Util.NamedWindows
 import XMonad.Hooks.ManageDocks
-import XMonad.Util.Run(spawnPipe)
+import XMonad.Hooks.UrgencyHook
+import XMonad.Util.Run(spawnPipe, safeSpawn)
 import XMonad.Actions.GridSelect (goToSelected)
 import qualified XMonad.StackSet as W
 import qualified XMonad.Util.Brightness as Bright
@@ -15,7 +17,9 @@ import qualified XMonad.Layout.IndependentScreens as IS
 
 main = do
   nScreens <- IS.countScreens
-  xmonad $ docks $ desktopConfig
+  xmonad $ docks
+         $ withUrgencyHook LibNotifyUrgencyHook
+         $ desktopConfig
     { manageHook = manageDocks <+> manageHook def
     , layoutHook = avoidStruts  $  layoutHook def
     , startupHook = do
@@ -34,6 +38,14 @@ main = do
     , workspaces            = IS.withScreens nScreens (map show [1..9])
     , keys                  = myKeys
     }
+
+data LibNotifyUrgencyHook = LibNotifyUrgencyHook deriving (Read, Show)
+
+instance UrgencyHook LibNotifyUrgencyHook where
+  urgencyHook LibNotifyUrgencyHook w = do
+    name     <- getName w
+    Just idx <- fmap (W.findTag w) $ gets windowset
+    safeSpawn "notify-send" [show name, "workspace " ++ idx]
 
 spawnOnWorkspace :: String -> String -> X ()
 spawnOnWorkspace ws program = do spawn program
