@@ -39,18 +39,6 @@ main = do
     , keys                  = myKeys
     }
 
-data LibNotifyUrgencyHook = LibNotifyUrgencyHook deriving (Read, Show)
-
-instance UrgencyHook LibNotifyUrgencyHook where
-  urgencyHook LibNotifyUrgencyHook w = do
-    name     <- getName w
-    Just idx <- fmap (W.findTag w) $ gets windowset
-    safeSpawn "notify-send" [show name, "workspace " ++ idx]
-
-spawnOnWorkspace :: String -> String -> X ()
-spawnOnWorkspace ws program = do spawn program
-                                 windows $ W.greedyView ws
-
 -- Usability --
 myTerminal    = "terminator"
 myModMask     = mod4Mask      -- Win key or Super_L
@@ -69,6 +57,19 @@ orange      = "#ee9a00"
 lightgreen  = "#00c500"
 darkgreen   = "#008000"
 lightblue   = "#70c4df"
+
+-- Specific workspace spawn --
+spawnOnWorkspace :: String -> String -> X ()
+spawnOnWorkspace ws program = do spawn program
+                                 windows $ W.greedyView ws
+
+-- Desktop Notifications --
+data LibNotifyUrgencyHook = LibNotifyUrgencyHook deriving (Read, Show)
+instance UrgencyHook LibNotifyUrgencyHook where
+  urgencyHook LibNotifyUrgencyHook w = do
+    name <- getName w
+    Just idx <- fmap (W.findTag w) $ gets windowset
+    safeSpawn "notify-send" [show name, "workspace " ++ idx]
 
 -- Xmobar multiple screens --
 xmobarCreator :: Bars.DynamicStatusBar
