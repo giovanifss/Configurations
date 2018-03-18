@@ -29,7 +29,7 @@
   hide_window = None
   insert_number = None
   insert_padded = None
-  layout_launcher = None
+  layout_launcher = <Alt>p
   move_tab_left = None
   move_tab_right = None
   new_tab = <Primary><Shift>t
@@ -66,6 +66,64 @@
     [[[window0]]]
       parent = ""
       type = Window
+  [[monitoring]]
+    [[[child0]]]
+      fullscreen = False
+      last_active_term = 6f7efddd-f289-4ae6-a1b0-ddacf4198069
+      last_active_window = True
+      maximised = True
+      order = 0
+      parent = ""
+      position = 3520:17
+      size = 958, 1061
+      title = /bin/zsh
+      type = Window
+    [[[child1]]]
+      order = 0
+      parent = child0
+      position = 316
+      ratio = 0.299242424242
+      type = VPaned
+    [[[child3]]]
+      order = 1
+      parent = child1
+      position = 478
+      ratio = 0.501573976915
+      type = HPaned
+    [[[child4]]]
+      order = 0
+      parent = child3
+      position = 372
+      ratio = 0.503382949932
+      type = VPaned
+    [[[terminal2]]]
+      command = sudo nethogs
+      order = 0
+      parent = child1
+      profile = default
+      type = Terminal
+      uuid = 6f7efddd-f289-4ae6-a1b0-ddacf4198069
+    [[[terminal5]]]
+      command = sudo iftop
+      order = 0
+      parent = child4
+      profile = default
+      type = Terminal
+      uuid = 5d5e8e55-9510-4340-9337-c2a15be5ebe8
+    [[[terminal6]]]
+      command = sudo netstat -nputwc
+      order = 1
+      parent = child4
+      profile = default
+      type = Terminal
+      uuid = ea3d2452-16f5-41bb-9687-e1e1895a5184
+    [[[terminal7]]]
+      command = sudo htop
+      order = 1
+      parent = child3
+      profile = default
+      type = Terminal
+      uuid = 43e5a5f8-21df-4df3-a5dd-5f0ae021edfb
 [plugins]
 [profiles]
   [[default]]
