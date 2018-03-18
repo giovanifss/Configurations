@@ -7,6 +7,7 @@ import XMonad.Hooks.ManageDocks
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Actions.GridSelect (goToSelected)
 import qualified XMonad.StackSet as W
+import qualified XMonad.Util.Brightness as Bright
 import qualified XMonad.Hooks.DynamicLog as DLog
 import qualified XMonad.Hooks.DynamicBars as Bars
 import qualified Graphics.X11.ExtraTypes.XF86 as XF86
@@ -88,7 +89,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
   , ((0, XF86.xF86XK_AudioPause), spawn "playerctl play-pause")                 -- Play/Pause media
   , ((0, XF86.xF86XK_AudioStop), spawn "playerctl stop")                        -- Stop media
   , ((0, XF86.xF86XK_AudioNext), spawn "playerctl next")                        -- Jump to next media
-  , ((0, XF86.xF86XK_AudioPrev), spawn "playerctl previous")]                   -- Jump to previous media
+  , ((0, XF86.xF86XK_AudioPrev), spawn "playerctl previous")                    -- Jump to previous media
+  , ((0, XF86.xF86XK_MonBrightnessUp), Bright.increase)                         -- Increase screen brightness
+  , ((0, XF86.xF86XK_MonBrightnessDown), Bright.decrease)]                      -- Decrease screen brightness
   ++
   [((m .|. modm, k), windows $ IS.onCurrentScreen f i)
       | (i, k) <- zip (IS.workspaces' conf) [xK_1 .. xK_9]                      -- mod-shift-[1..9], Move client to workspace N in focused screen
