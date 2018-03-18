@@ -1,1 +1,1 @@
-GuiFont Monospace:h16
+GuiFont Monospace:h11

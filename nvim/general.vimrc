@@ -52,24 +52,24 @@ set fillchars=vert:\│,fold:\─
 let g:terminal_scrollback_buffer_size=9999999
 
 "---------------------------------------------
-"           Trouxe do vim normal:
+"          BROUGTH FROM VIM:
 "---------------------------------------------
-" Retira qualquer coisa que a distro tenha imposto
+" Remove any distro stuff
 set nocompatible
 
-" Faz com que novas janelas sejam abertas em baixo ou a direita
+" Open windows in the right and below
 set splitbelow
 set splitright
 
-" Mostra parte de comandos na ultima linha da tela
+" Show part of command in last line
 set showcmd
 
-" Busca em case insensitive menos quando se busca em letras maiusculas
+" Search case insensitive by default
 set ignorecase
 set smartcase
 
-" Ao inves de falhar o comando pq tem mudancas nao salvas, mostra um dialogo perguntando se deseja salvar
+" Ask to save before quiting
 set confirm
 
-" Seta a janela de comando para ter 2 linhas
+" Set command window to have 2 lines
 set cmdheight=2
