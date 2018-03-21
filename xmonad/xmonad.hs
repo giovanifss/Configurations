@@ -6,6 +6,7 @@ import XMonad.Config.Desktop
 import XMonad.Util.NamedWindows
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.UrgencyHook
+import XMonad.Util.NamedScratchpad
 import XMonad.Util.Run(spawnPipe, safeSpawn)
 import XMonad.Actions.GridSelect (goToSelected)
 import qualified XMonad.StackSet as W
@@ -20,7 +21,7 @@ main = do
   xmonad $ docks
          $ withUrgencyHook LibNotifyUrgencyHook
          $ desktopConfig
-    { manageHook = manageDocks <+> manageHook def
+    { manageHook = manageDocks <+> manageScratchpad <+> manageHook def
     , layoutHook = avoidStruts  $  layoutHook def
     , startupHook = do
         Bars.dynStatusBarStartup xmobarCreator xmobarDestroyer
@@ -57,6 +58,21 @@ lightgreen  = "#00c500"
 darkgreen   = "#008000"
 lightblue   = "#70c4df"
 
+-- Scratchpad stuff --
+termScratch = "terminal-scratchpad"                               -- Scratchpad terminal identifier
+termScratchRect = W.RationalRect leftEdge topEdge width height    -- Scratchpad terminal window size/location
+  where height    = 0.7
+        width     = 0.8
+        topEdge   = 0.1
+        leftEdge  = 0.1
+
+manageScratchpad :: ManageHook
+manageScratchpad = namedScratchpadManageHook scratchpads
+
+scratchpads :: NamedScratchpads
+scratchpads =
+  [ NS termScratch ("terminator -T " ++ termScratch) (title =? termScratch) (customFloating termScratchRect) ]
+
 -- Specific workspace spawn --
 spawnOnWorkspace :: String -> String -> X ()
 spawnOnWorkspace ws program = do spawn program
@@ -78,7 +94,7 @@ xmobarDestroyer :: Bars.DynamicStatusBarCleanup
 xmobarDestroyer = return ()
 
 myLogPP :: DLog.PP
-myLogPP = def
+myLogPP = namedScratchpadFilterOutWorkspacePP $ def
   { DLog.ppCurrent = DLog.xmobarColor grey black . DLog.pad
   , DLog.ppVisible = \_ -> ""
   , DLog.ppHidden  = DLog.xmobarColor grey black
@@ -109,6 +125,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
   , ((0, XF86.xF86XK_AudioPrev), spawn "playerctl previous")                    -- Jump to previous media
   , ((0, XF86.xF86XK_MonBrightnessUp), Bright.increase)                         -- Increase screen brightness
   , ((0, XF86.xF86XK_MonBrightnessDown), Bright.decrease)]                      -- Decrease screen brightness
+  ++
+  [ ((0, xK_F7), namedScratchpadAction scratchpads termScratch)]                -- Launch scratchpad terminal
   ++
   [((m .|. modm, k), windows $ IS.onCurrentScreen f i)
       | (i, k) <- zip (IS.workspaces' conf) [xK_1 .. xK_9]                      -- mod-shift-[1..9], Move client to workspace N in focused screen
