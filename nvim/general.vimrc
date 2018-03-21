@@ -2,6 +2,7 @@
 "        GENERAL VIM CONFIGURATIONS
 "---------------------------------------------
 set noreadonly
+set encoding=utf-8
 
 if !&scrolloff
     set scrolloff=3       " Show next 3 lines while scrolling.
