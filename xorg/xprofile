@@ -1,4 +1,4 @@
 #!/bin/bash
 
-feh --bg-scale Pictures/wallpapers/Dark-world-map-wallpaper-HD.jpg
-xcompmgr -c &
+feh --bg-scale ~/.config/wallpapers/cyberpunk_city.jpg
+compton -b
