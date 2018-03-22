@@ -96,6 +96,9 @@ Plug 'junegunn/vader.vim'
 " Vim numbers
 Plug 'myusuf3/numbers.vim'
 
+" Increment numbers in column
+Plug 'triglav/vim-visual-increment'
+
 " Splunk syntax
 Plug 'vim-scripts/splunk.vim'
 

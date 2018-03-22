@@ -40,7 +40,7 @@ main = do
     }
 
 -- Usability --
-myTerminal    = "terminator"
+myTerminal    = "termite"
 myModMask     = mod4Mask      -- Win key or Super_L
 myBorderWidth = 1
 
@@ -71,7 +71,7 @@ manageScratchpad = namedScratchpadManageHook scratchpads
 
 scratchpads :: NamedScratchpads
 scratchpads =
-  [ NS termScratch ("terminator -T " ++ termScratch) (title =? termScratch) (customFloating termScratchRect) ]
+  [ NS termScratch ("termite -t " ++ termScratch) (title =? termScratch) (customFloating termScratchRect) ]
 
 -- Specific workspace spawn --
 spawnOnWorkspace :: String -> String -> X ()
