@@ -102,6 +102,7 @@ function main () {
   setup "${pwd}" "xorg/xprofile" "$HOME/.xprofile"        # Setup xprofile
   setup "${pwd}" "urxvt/urxvt.conf" "$HOME/.Xdefaults"    # Setup urxvt
   setup "${pwd}" "terminator" "$HOME/.config/terminator"  # Setup terminator
+  setup "${pwd}" "termite" "$HOME/.config/termite"        # Setup termite
   setup_neovim "${pwd}"
   setup_xmobar "${pwd}"
   setup_xmonad "${pwd}"
