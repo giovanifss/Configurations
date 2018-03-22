@@ -103,6 +103,7 @@ function main () {
   setup "${pwd}" "urxvt/urxvt.conf" "$HOME/.Xdefaults"    # Setup urxvt
   setup "${pwd}" "terminator" "$HOME/.config/terminator"  # Setup terminator
   setup "${pwd}" "termite" "$HOME/.config/termite"        # Setup termite
+  setup "${pwd}" "wallpapers" "$HOME/.config/wallpapers"  # Setup wallpapers
   setup_neovim "${pwd}"
   setup_xmobar "${pwd}"
   setup_xmonad "${pwd}"
