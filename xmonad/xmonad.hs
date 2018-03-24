@@ -34,7 +34,7 @@ main = do
     , focusFollowsMouse     = myFocusFollowsMouse
     , clickJustFocuses      = myClickJustFocuses
     , normalBorderColor     = black
-    , focusedBorderColor    = grey
+    , focusedBorderColor    = darkblue
     , workspaces            = IS.withScreens nScreens (map show [1..9])
     , keys                  = myKeys
     }
@@ -57,6 +57,7 @@ orange      = "#ee9a00"
 lightgreen  = "#00c500"
 darkgreen   = "#008000"
 lightblue   = "#70c4df"
+darkblue    = "#002436"
 
 -- Scratchpad stuff --
 termScratch = "terminal-scratchpad"                               -- Scratchpad terminal identifier
