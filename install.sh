@@ -8,8 +8,9 @@ function create_symlink () {
 
   if [ ! -h "${dest_path}" ]; then
     [ -e "${dest_path}" ] && mv "${dest_path}" "${dest_path}.bkp"    # Backup file if exists
-    echo "--> Creating symlink '${dest_path} -> ${origin_path}'"
-    ln -s "${origin_path}" "${dest_path}"
+    ln -s "${origin_path}" "${dest_path}" \
+      && echo "[+] Created symlink '${dest_path} -> ${origin_path}'" \
+      || echo "[-] Could not create symlink '${dest_path} -> ${origin_path}'"
   else
     echo ":: Symlink ${dest_path} already exists"
   fi
@@ -22,33 +23,40 @@ function setup () {
   create_symlink "${from}" "${to}"
 }
 
+function update_file () {
+  local file="$1"
+  local old="$2"
+  local new="$3"
+  if grep -q "${old}" "${file}"; then
+    sed -i -e 's|'"${old}"'|'"${new}"'|g' "${file}"
+    echo -e "\t[+] Updated ${file}"
+  else
+    echo -e "\t:: Nothing to update in ${file}"
+  fi
+}
+
 function setup_neovim () {
   local current_dir="$1"
   local from="${current_dir}/nvim"
   local to="$HOME/.config/nvim"
-
-  echo "--> Updating fzf-proj.vimrc"
-  sed -i -e 's|<CODE-PROJECTS>|'"$projects"'|g' nvim/plugins/fzf-proj.vimrc
+  update_file "nvim/plugins/fzf-proj.vimrc" "<CODE-PROJECTS>" "${projects}"
   create_symlink "${from}" "${to}"
 }
 
 function configure_xmobar () {
   local current_dir="$1"
   local interface="$(ip addr | grep '[0-9]: .*: ' | cut -d ' ' -f2 | cut -d ':' -f1 | grep -v "lo")"
-  echo "--> Updating xmobarrc.hs"
-  sed -i -e 's|<IF-1>|'"${interface}"'|g' xmobar/xmobarrc.hs
-  sed -i -e 's|<XMOBAR-DIR>|'"$HOME/.xmobar"'|g' xmobar/xmobarrc.hs
-  echo "--> Updating xmobar battery.sh script"
-  sed -i -e 's|<XMOBAR-DIR>|'"$HOME/.xmobar"'|g' xmobar/scripts/battery.sh
+  update_file "xmobar/xmobarrc.hs" "<IF-1>" "${interface}"
+  update_file "xmobar/xmobarrc.hs" "<XMOBAR-DIR>" "$HOME/.xmobar"
+  update_file "xmobar/scripts/battery.sh" "<XMOBAR-DIR>" "$HOME/.xmobar"
+  update_file "xmonad/xmonad.hs" "<XMOBAR-BIN>" "$(which xmobar)"
+  update_file "xmonad/xmonad.hs" "<XMOBAR-RC>" "$HOME/.xmobar/xmobarrc.hs"
 }
 
 function setup_xmonad () {
   local current_dir="$1"
   local from="${current_dir}/xmonad/xmonad.hs"
   local to="$HOME/.xmonad/xmonad.hs"
-
-  echo "--> Updating xmonad.hs"
-  sed -i -e 's|<XMOBAR-BIN>|'"$(which xmobar)"'|g' -e "s|<XMOBAR-RC>|$HOME/.xmobar/xmobarrc.hs|g" xmonad/xmonad.hs
   mkdir -p "$HOME/.xmonad"
   create_symlink "${from}" "${to}"
 }
@@ -57,10 +65,8 @@ function setup_zsh () {
   local current_dir="$1"
   local from="${current_dir}/zsh/zshrc"
   local to="$HOME/.zshrc"
-
-  echo "--> Updating zshrc"
-  sed -i -e 's|<HOME-DIR>|'"$HOME"'|g' zsh/zshrc
-  sed -i -e 's|<CODE-PROJECTS>|'"$projects"'|g' zsh/zshrc
+  update_file "zsh/zshrc" "<HOME-DIR>" "$HOME"
+  update_file "zsh/zshrc" "<CODE-PROJECTS>" "${projects}"
   create_symlink "${from}" "${to}"
 }
 
