@@ -32,15 +32,14 @@ function setup_neovim () {
   create_symlink "${from}" "${to}"
 }
 
-function setup_xmobar () {
+function configure_xmobar () {
   local current_dir="$1"
   local interface="$(ip addr | grep '[0-9]: .*: ' | cut -d ' ' -f2 | cut -d ':' -f1 | grep -v "lo")"
-  local from="${current_dir}/xmobar/xmobarrc.hs"
-  local to="$HOME/.xmobarrc"
-
   echo "--> Updating xmobarrc.hs"
   sed -i -e 's|<IF-1>|'"${interface}"'|g' xmobar/xmobarrc.hs
-  create_symlink "${from}" "${to}"
+  sed -i -e 's|<XMOBAR-DIR>|'"$HOME/.xmobar"'|g' xmobar/xmobarrc.hs
+  echo "--> Updating xmobar battery.sh script"
+  sed -i -e 's|<XMOBAR-DIR>|'"$HOME/.xmobar"'|g' xmobar/scripts/battery.sh
 }
 
 function setup_xmonad () {
@@ -49,7 +48,7 @@ function setup_xmonad () {
   local to="$HOME/.xmonad/xmonad.hs"
 
   echo "--> Updating xmonad.hs"
-  sed -i -e 's|<XMOBAR-BIN>|'"$(which xmobar)"'|g' -e "s|<XMOBAR-RC>|$HOME/.xmobarrc|g" xmonad/xmonad.hs
+  sed -i -e 's|<XMOBAR-BIN>|'"$(which xmobar)"'|g' -e "s|<XMOBAR-RC>|$HOME/.xmobar/xmobarrc.hs|g" xmonad/xmonad.hs
   mkdir -p "$HOME/.xmonad"
   create_symlink "${from}" "${to}"
 }
@@ -99,13 +98,15 @@ function main () {
   local pwd
   pwd="$(pwd)"
 
-  setup "${pwd}" "xorg/xprofile" "$HOME/.xprofile"        # Setup xprofile
-  setup "${pwd}" "urxvt/urxvt.conf" "$HOME/.Xdefaults"    # Setup urxvt
-  setup "${pwd}" "terminator" "$HOME/.config/terminator"  # Setup terminator
-  setup "${pwd}" "termite" "$HOME/.config/termite"        # Setup termite
-  setup "${pwd}" "wallpapers" "$HOME/.config/wallpapers"  # Setup wallpapers
+  setup "${pwd}" "xorg/xprofile" "$HOME/.xprofile"        # Setup symlink for xprofile
+  setup "${pwd}" "urxvt/urxvt.conf" "$HOME/.Xdefaults"    # Setup symlink for urxvt
+  setup "${pwd}" "terminator" "$HOME/.config/terminator"  # Setup symlink for terminator
+  setup "${pwd}" "termite" "$HOME/.config/termite"        # Setup symlink for termite
+  setup "${pwd}" "wallpapers" "$HOME/.config/wallpapers"  # Setup symlink for wallpapers
+  setup "${pwd}" "xmobar" "$HOME/.xmobar"                 # Setup symlink for xmobar
+
+  configure_xmobar "${pwd}" # Configure xmobar
   setup_neovim "${pwd}"
-  setup_xmobar "${pwd}"
   setup_xmonad "${pwd}"
   setup_zsh "${pwd}"
   setup_lightdm "${pwd}"

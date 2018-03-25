@@ -1,5 +1,4 @@
 Config {
-
   -- Appearance
     font = "xft:Bitstream Vera Sans Mono:size=9:bold:antialias=tru"
   , borderColor = "#000000"    -- black
@@ -11,13 +10,13 @@ Config {
   -- Layout
   , sepChar = "%"
   , alignSep = "}{"
-  , template = "%StdinReader% | %cpu% | %memory% * %swap% | %wlp3s0% }<fc=#ee9a00>%date%</fc>{%uname% | <fc=#ee9a00>%whoami%</fc> | %battery% "
+  , template = "%StdinReader% | %cpu% | %memory% * %swap% | %<IF-1>% }<fc=#ee9a00>%date%</fc>{%uname% | <fc=#ee9a00>%whoami%</fc> | %battery% "
 
   -- Plugins
   , commands =
 
         -- Network activiy for primarily interface
-        [ Run Network "wlp3s0" [ "-L", "1000"
+        [ Run Network "<IF-1>" [ "-L", "1000"
                                , "-H", "2000000"
                                , "--normal", "#00c500"   -- lightgreen
                                , "--high", "#cc0000"     -- red
@@ -46,16 +45,7 @@ Config {
                                ] 10
 
         -- Battery monitor
-        , Run Battery          [ "--template", "Batt: <acstatus>"
-                               , "--Low", "10"
-                               , "--High", "50"
-                               , "--low", "#cc0000"      -- red
-                               , "--normal", "#ee9a00"   -- orange
-                               , "--"                    -- battery specific options
-                               , "-o", "<left>% (<timeleft>)"                  -- discharging status
-                               , "-O", "<left>% [<fc=#ee9a00>Charging</fc>]"   -- AC "on" status - Orange color
-                               , "-i", "<left>% [<fc=#008000>Charged</fc>]"    -- charged status - Darkgreen color
-                               ] 50
+        , Run Com "<XMOBAR-DIR>/scripts/battery.sh" [] "battery" 400
 
         -- Swap usage monitor
         , Run Swap             [ "-t", "Swap: <usedratio>%"
