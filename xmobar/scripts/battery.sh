@@ -13,6 +13,7 @@ darkgreen="#008000"
 # Final values
 icon=""
 color=""
+template=""
 
 # Define color and icon based on battery status
 if echo "$BATTINFO" | grep -q "Discharging"; then
@@ -48,4 +49,8 @@ if [[ $(echo $BATTINFO | grep Discharging) && $REMAINING < 00:15:00 ]]; then
 fi
 
 # Return battery template for xmobar
-echo "$CHARGE% <fc=$color><icon=$ICONS_PATH/$icon/></fc> ($(echo $REMAINING | cut -d ':' -f 1,2))"
+template="$CHARGE% <fc=$color><icon=$ICONS_PATH/$icon/></fc>"
+if ! echo "$BATTINFO" | grep -q "Full"; then
+  template="$template ($(echo $REMAINING | cut -d ':' -f 1,2))"
+fi
+echo "$template"
