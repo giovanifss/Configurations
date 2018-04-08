@@ -152,12 +152,13 @@ function configure_neovim () {
 
 function configure_xmobar () {
   local current_dir="$1"
+  local top_xmobar="xmobar/top.hs"
   local interface="$(ip addr | grep '[0-9]: .*: ' | cut -d ' ' -f2 | cut -d ':' -f1 | grep -v "lo")"
-  update_file "xmobar/xmobarrc.hs" "<IF-1>" "${interface}"
-  update_file "xmobar/xmobarrc.hs" "<XMOBAR-DIR>" "$HOME/.xmobar"
+  update_file "${top_xmobar}" "<IF-1>" "${interface}"
+  update_file "${top_xmobar}" "<XMOBAR-DIR>" "$HOME/.xmobar"
   update_file "xmobar/scripts/battery.sh" "<XMOBAR-DIR>" "$HOME/.xmobar"
   update_file "xmonad/xmonad.hs" "<XMOBAR-BIN>" "$(which xmobar)"
-  update_file "xmonad/xmonad.hs" "<XMOBAR-RC>" "$HOME/.xmobar/xmobarrc.hs"
+  update_file "xmonad/xmonad.hs" "<XMOBAR-TOP>" "$HOME/.xmobar/top.hs"
 }
 
 function configure_zsh () {

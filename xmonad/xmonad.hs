@@ -89,7 +89,7 @@ instance UrgencyHook LibNotifyUrgencyHook where
 
 -- Xmobar multiple screens --
 xmobarCreator :: Bars.DynamicStatusBar
-xmobarCreator (S sid) = spawnPipe $ "<XMOBAR-BIN> <XMOBAR-RC> --screen " ++ show sid
+xmobarCreator (S sid) = spawnPipe $ "<XMOBAR-BIN> <XMOBAR-TOP> --screen " ++ show sid
 
 xmobarDestroyer :: Bars.DynamicStatusBarCleanup
 xmobarDestroyer = return ()
