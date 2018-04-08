@@ -1,7 +1,113 @@
 #!/bin/bash
 
-projects="path/to/projects"
+#--------------------------------------------------------------------
+# Configuration variables
+#--------------------------------------------------------------------
+PROJECTS=""
+ZSH=true
+XMONAD=true
+XMOBAR=true
+TERMINATOR=true
+TERMITE=true
+URXVT=true
+XPROFILE=true
+NEOVIM=true
+LIGHTDM=true
+WALLPAPERS=true
 
+#--------------------------------------------------------------------
+# Helper functions
+#--------------------------------------------------------------------
+function parse_args(){
+  while (( "$#" )); do
+    case $1 in
+      -p|--projects-dir)
+        if [ -z $2 ] || [[ $2 == -* ]]; then
+          echoerr "Expected argument after output file option" && exit 2
+        fi
+        PROJECTS=$2
+        shift;;           # To ensure that the next parameter will not be evaluated again
+
+      --no-zsh)
+        ZSH=false;;
+
+      --no-xmonad)
+        XMONAD=false;;
+
+      --no-xmobar)
+        XMOBAR=false;;
+
+      --no-terminator)
+        TERMINATOR=false;;
+
+      --no-termite)
+        TERMITE=false;;
+
+      --no-urxvt)
+        URXVT=false;;
+
+      --no-xprofile)
+        XPROFILE=false;;
+
+      --no-neovim)
+        NEOVIM=false;;
+
+      --no-lightdm)
+        LIGHTDM=false;;
+
+      --no-wallpapers)
+        WALLPAPERS=false;;
+
+      -h|--help)
+        display_help
+        exit 0;;
+
+      *)
+        echoerr "Unknow argument $1" && exit 2;;
+    esac
+    shift
+  done
+
+  if [ -z $PROJECTS ] && $ZSH && $NEOVIM; then
+    echoerr "Error: Projects must be specified to setup neovim and zsh"
+    echoerr "Use --projects-dir or disable neovim and zsh setup with --no-zsh and --no-neovim"
+    exit 2
+  fi
+  return 0
+}
+
+function display_help(){
+    echo
+    echo "Usage: ./install.sh [OPTIONS]..."
+    echo "Setup all desktop configurations"
+    echo
+    echo "Options:"
+    echo -e "\t-p, --projects-dir\t\tfull path to projects directory"
+    echo -e "\t--no-lightdm\t\t\tdo not install lightdm configurations"
+    echo -e "\t--no-zsh\t\t\tdo not install zsh configurations"
+    echo -e "\t--no-xmonad\t\t\tdo not install xmonad configurations"
+    echo -e "\t--no-xmobar\t\t\tdo not install xmobar configurations"
+    echo -e "\t--no-terminator\t\t\tdo not install terminator configurations"
+    echo -e "\t--no-termite\t\t\tdo not install termite configurations"
+    echo -e "\t--no-neovim\t\t\tdo not install neovim configurations"
+    echo -e "\t--no-urxvt\t\t\tdo not create Xdefaults"
+    echo -e "\t--no-xprofile\t\t\tdo not create xprofile"
+    echo -e "\t--no-wallpapers\t\t\tdo not create wallpapers folder"
+    echo
+    echo "Exit status:"
+    echo -e " 0\tif OK"
+    echo -e " 1\tif minor problems"
+    echo -e " 2\tif serious trouble"
+}
+
+function echoerr {
+    cat <<< "$@" 1>&2
+}
+
+
+#--------------------------------------------------------------------
+# Base functions
+#--------------------------------------------------------------------
 function create_symlink () {
   local origin_path="$1"
   local dest_path="$2"
@@ -17,10 +123,12 @@ function create_symlink () {
 }
 
 function setup () {
-  local current_dir="$1"
-  local from="${current_dir}/$2"
-  local to="$3"
+  [ "$1" == false ] && return 1   # Check if --no-[x] was specified
+  local current_dir="$2"
+  local from="${current_dir}/$3"
+  local to="$4"
   create_symlink "${from}" "${to}"
+  return 0
 }
 
 function update_file () {
@@ -35,12 +143,11 @@ function update_file () {
   fi
 }
 
-function setup_neovim () {
-  local current_dir="$1"
-  local from="${current_dir}/nvim"
-  local to="$HOME/.config/nvim"
-  update_file "nvim/plugins/fzf-proj.vimrc" "<CODE-PROJECTS>" "${projects}"
-  create_symlink "${from}" "${to}"
+#--------------------------------------------------------------------
+# Configuration functions
+#--------------------------------------------------------------------
+function configure_neovim () {
+  update_file "nvim/plugins/fzf-proj.vimrc" "<CODE-PROJECTS>" "${PROJECTS}"
 }
 
 function configure_xmobar () {
@@ -53,20 +160,20 @@ function configure_xmobar () {
   update_file "xmonad/xmonad.hs" "<XMOBAR-RC>" "$HOME/.xmobar/xmobarrc.hs"
 }
 
+function configure_zsh () {
+  local current_dir="$1"
+  update_file "zsh/zshrc" "<HOME-DIR>" "$HOME"
+  update_file "zsh/zshrc" "<CODE-PROJECTS>" "${PROJECTS}"
+}
+
+#--------------------------------------------------------------------
+# Specific setup functions
+#--------------------------------------------------------------------
 function setup_xmonad () {
   local current_dir="$1"
   local from="${current_dir}/xmonad/xmonad.hs"
   local to="$HOME/.xmonad/xmonad.hs"
   mkdir -p "$HOME/.xmonad"
-  create_symlink "${from}" "${to}"
-}
-
-function setup_zsh () {
-  local current_dir="$1"
-  local from="${current_dir}/zsh/zshrc"
-  local to="$HOME/.zshrc"
-  update_file "zsh/zshrc" "<HOME-DIR>" "$HOME"
-  update_file "zsh/zshrc" "<CODE-PROJECTS>" "${projects}"
   create_symlink "${from}" "${to}"
 }
 
@@ -100,22 +207,27 @@ function setup_lightdm () {
   setup_lightdm_cfg "${current_dir}"
 }
 
+#--------------------------------------------------------------------
+# Main function and script pre-execution preparation
+#--------------------------------------------------------------------
 function main () {
   local pwd
   pwd="$(pwd)"
 
-  setup "${pwd}" "xorg/xprofile" "$HOME/.xprofile"        # Setup symlink for xprofile
-  setup "${pwd}" "urxvt/urxvt.conf" "$HOME/.Xdefaults"    # Setup symlink for urxvt
-  setup "${pwd}" "terminator" "$HOME/.config/terminator"  # Setup symlink for terminator
-  setup "${pwd}" "termite" "$HOME/.config/termite"        # Setup symlink for termite
-  setup "${pwd}" "wallpapers" "$HOME/.config/wallpapers"  # Setup symlink for wallpapers
-  setup "${pwd}" "xmobar" "$HOME/.xmobar"                 # Setup symlink for xmobar
-
-  configure_xmobar "${pwd}" # Configure xmobar
-  setup_neovim "${pwd}"
-  setup_xmonad "${pwd}"
-  setup_zsh "${pwd}"
-  setup_lightdm "${pwd}"
+  setup "$XPROFILE" "${pwd}" "xorg/xprofile" "$HOME/.xprofile"          # Setup symlink for xprofile
+  setup "$URXVT" "${pwd}" "urxvt/urxvt.conf" "$HOME/.Xdefaults"         # Setup symlink for urxvt
+  setup "$TERMINATOR" "${pwd}" "terminator" "$HOME/.config/terminator"  # Setup symlink for terminator
+  setup "$TERMITE" "${pwd}" "termite" "$HOME/.config/termite"           # Setup symlink for termite
+  setup "$WALLPAPERS" "${pwd}" "wallpapers" "$HOME/.config/wallpapers"  # Setup symlink for wallpapers
+  setup "$ZSH" "${pwd}" "zsh/zshrc" "$HOME/.zshrc" &&                   # Setup symlink for zsh
+    configure_zsh "${pwd}"                                              # Configure zsh
+  setup "$XMOBAR" "${pwd}" "xmobar" "$HOME/.xmobar" &&                  # Setup symlink for xmobar
+    configure_xmobar "${pwd}"                                           # Configure xmobar
+  setup "$NEOVIM" "${pwd}" "nvim" "$HOME/.config/nvim" &&               # Setup symlink for neovim
+    configure_neovim                                                    # Configure neovim
+  [ "$XMONAD" == true ] && setup_xmonad "${pwd}"                        # Setup xmonad
+  [ "$LIGHTDM" == true ] && setup_lightdm "${pwd}"                      # Setup lightdm
 }
 
+parse_args $@
 main
