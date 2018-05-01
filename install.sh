@@ -5,6 +5,7 @@
 #--------------------------------------------------------------------
 PROJECTS=""
 ZSH=true
+UDEV=true
 XMONAD=true
 XMOBAR=true
 TERMINATOR=true
@@ -26,10 +27,13 @@ function parse_args(){
           echoerr "Expected argument after output file option" && exit 2
         fi
         PROJECTS=$2
-        shift;;           # To ensure that the next parameter will not be evaluated again
+        shift;;
 
       --no-zsh)
         ZSH=false;;
+
+      --no-udev)
+        UDEV=false;;
 
       --no-xmonad)
         XMONAD=false;;
@@ -143,6 +147,12 @@ function update_file () {
   fi
 }
 
+function in_file () {
+  local content="$1"
+  local file="$2"
+  grep -q "${content}" "${file}"
+}
+
 #--------------------------------------------------------------------
 # Configuration functions
 #--------------------------------------------------------------------
@@ -202,6 +212,14 @@ function setup_lightdm_cfg () {
   fi
 }
 
+function setup_udev_rules () {
+  local current_dir="$1"
+  local udev_dir="/etc/udev/rules.d"
+  local udev_rules="${current_dir}/udev-rules"
+  echo "--> Adding udev rules"
+  sudo cp -r "${udev_rules}/." "${udev_dir}/"
+}
+
 function setup_lightdm () {
   local current_dir="$1"
   setup_lightdm_bg "${current_dir}"
@@ -228,6 +246,7 @@ function main () {
     configure_neovim                                                    # Configure neovim
   [ "$XMONAD" == true ] && setup_xmonad "${pwd}"                        # Setup xmonad
   [ "$LIGHTDM" == true ] && setup_lightdm "${pwd}"                      # Setup lightdm
+  [ "$UDEV" == true ] && setup_udev_rules "${pwd}"                      # Setup udev rules
 }
 
 parse_args $@
