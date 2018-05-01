@@ -43,6 +43,8 @@ main = do
 myTerminal    = "termite"
 myModMask     = mod4Mask      -- Win key or Super_L
 myBorderWidth = 1
+myLauncher    = "exe=`dmenu_path | dmenu` && eval \"exec $exe\"" 
+myLockScreen  = "physlock -d -m -p 'Everything is being recorded'"
 
 myFocusFollowsMouse   = False
 myClickJustFocuses    = False
@@ -112,12 +114,14 @@ myLogPPActive = myLogPP
 -- Keybindings --
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
   [ ((modm, xK_Return), spawn $ XMonad.terminal conf)                           -- Launch terminal
-  , ((modm, xK_p), spawn "exe=`dmenu_path | dmenu` && eval \"exec $exe\"")      -- Launch dmenu
-  , ((modm, xK_l), spawn "physlock -d -m -p 'Everything is being recorded'")    -- Lock screen - physlock
+  , ((modm, xK_p), spawn myLauncher)                                            -- Launch launcher
+  , ((modm, xK_l), spawn myLockScreen)                                          -- Lock screen
   , ((modm, xK_c), kill)                                                        -- Close focused window
   , ((modm, xK_k), windows W.focusUp)                                           -- Move focus to the previous window
   , ((modm, xK_j), windows W.focusDown)                                         -- Move focus to the next window
-  , ((modm, xK_t), withFocused $ windows . W.sink)]                             -- Push window back into tiling
+  , ((modm, xK_t), withFocused $ windows . W.sink)                              -- Push window back into tiling
+  , ((modm .|. controlMask, xK_j), windows W.swapDown)                          -- Swap the focused window with the next window.
+  , ((modm .|. controlMask, xK_k), windows W.swapUp)]                           -- Swap the focused window with the previous window.
   ++
   [ ((0, XF86.xF86XK_AudioPlay), spawn "playerctl play-pause")                  -- Play/Pause media
   , ((0, XF86.xF86XK_AudioPause), spawn "playerctl play-pause")                 -- Play/Pause media
