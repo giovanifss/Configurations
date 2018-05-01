@@ -113,15 +113,21 @@ myLogPPActive = myLogPP
 
 -- Keybindings --
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
-  [ ((modm, xK_Return), spawn $ XMonad.terminal conf)                           -- Launch terminal
+  [ ((modm, xK_c), kill)                                                        -- Close focused window
   , ((modm, xK_p), spawn myLauncher)                                            -- Launch launcher
-  , ((modm, xK_l), spawn myLockScreen)                                          -- Lock screen
-  , ((modm, xK_c), kill)                                                        -- Close focused window
+  , ((modm, xK_backslash), spawn myLockScreen)                                  -- Lock screen
+  , ((modm, xK_Return), spawn $ XMonad.terminal conf)]                          -- Launch terminal
+  ++
+  [ ((modm, xK_h), sendMessage Shrink)                                          -- Shrink the master area
+  , ((modm, xK_l), sendMessage Expand)                                          -- Expand the master area
   , ((modm, xK_k), windows W.focusUp)                                           -- Move focus to the previous window
   , ((modm, xK_j), windows W.focusDown)                                         -- Move focus to the next window
   , ((modm, xK_t), withFocused $ windows . W.sink)                              -- Push window back into tiling
+  , ((modm, xK_comma), sendMessage (IncMasterN 1))                              -- Increment the number of windows in the master area
+  , ((modm, xK_period), sendMessage (IncMasterN (-1)))                          -- Deincrement the number of windows in the master area
+  , ((modm .|. controlMask, xK_k), windows W.swapUp)                            -- Swap the focused window with the previous window.
   , ((modm .|. controlMask, xK_j), windows W.swapDown)                          -- Swap the focused window with the next window.
-  , ((modm .|. controlMask, xK_k), windows W.swapUp)]                           -- Swap the focused window with the previous window.
+  , ((modm .|. controlMask, xK_m), windows W.swapMaster)]                       -- Swap the focused window and the master window
   ++
   [ ((0, XF86.xF86XK_AudioPlay), spawn "playerctl play-pause")                  -- Play/Pause media
   , ((0, XF86.xF86XK_AudioPause), spawn "playerctl play-pause")                 -- Play/Pause media
