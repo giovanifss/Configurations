@@ -58,9 +58,8 @@ setopt HIST_SAVE_NO_DUPS
 setopt HIST_BEEP
 
 # Aliases
-alias ls="ls --color=auto"
-alias vim="nvim"
-alias lls="ls --color=auto"
+alias ls='ls --color=auto'
+alias lls='ls --color=auto'
 alias ll='ls -l --color=auto'
 alias la='ls -a --color=auto'
 alias lla='ls -al --color=auto'
@@ -77,6 +76,7 @@ alias restart='sudo systemctl restart'
 alias pacman="sudo pacman"
 alias quit='exit'
 alias gocfg='cd <CODE-PROJECTS>/configs'
+alias aura='aura -x'
 
 # Prompt configuration
 autoload -U colors && colors
