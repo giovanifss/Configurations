@@ -45,9 +45,13 @@ myModMask     = mod4Mask      -- Win key or Super_L
 myBorderWidth = 1
 myLauncher    = "exe=`dmenu_path | dmenu` && eval \"exec $exe\"" 
 myLockScreen  = "physlock -d -m -p 'Everything is being recorded'"
+myScreenShot  = "gnome-screenshot"
 
 myFocusFollowsMouse   = False
 myClickJustFocuses    = False
+
+-- Workarounds
+smallDelay    = "sleep 0.2;"  -- Some applications do not work without a small delay before execution
 
 -- Color configuration --
 black       = "#000000"
@@ -117,6 +121,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
   , ((modm, xK_p), spawn myLauncher)                                            -- Launch launcher
   , ((modm, xK_backslash), spawn myLockScreen)                                  -- Lock screen
   , ((modm, xK_Return), spawn $ XMonad.terminal conf)]                          -- Launch terminal
+  ++
+  [ ((controlMask, xK_Print), spawn myScreenShot)                               -- Launch gnome screenshot
+  , ((0, xK_Print), spawn (smallDelay ++ myScreenShot ++ " -a"))]               -- Launch gnome screenshot for specific area
   ++
   [ ((modm, xK_h), sendMessage Shrink)                                          -- Shrink the master area
   , ((modm, xK_l), sendMessage Expand)                                          -- Expand the master area
