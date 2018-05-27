@@ -67,6 +67,8 @@ alias cd..='cd ..'
 alias l='ls --color=auto'
 alias s='ls --color=auto'
 alias lls='ls --color=auto'
+alias ip='ip --color'
+alias ipb='ip --color --brief'
 alias stop='sudo systemctl stop'
 alias start='sudo systemctl start'
 alias status='sudo systemctl status'
@@ -74,9 +76,9 @@ alias disable='sudo systemctl disable'
 alias enable='sudo systemctl enable'
 alias restart='sudo systemctl restart'
 alias pacman="sudo pacman"
+alias aura='aura -x'
 alias quit='exit'
 alias gocfg='cd <CODE-PROJECTS>/configs'
-alias aura='aura -x'
 
 # Prompt configuration
 autoload -U colors && colors
