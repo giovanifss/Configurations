@@ -42,7 +42,7 @@ main = do
 -- Usability --
 myTerminal    = "termite"
 myModMask     = mod4Mask      -- Win key or Super_L
-myBorderWidth = 1
+myBorderWidth = 3
 myLauncher    = "exe=`dmenu_path | dmenu` && eval \"exec $exe\"" 
 myLockScreen  = "physlock -d -m -p 'Everything is being recorded'"
 myScreenShot  = "gnome-screenshot"
