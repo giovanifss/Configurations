@@ -16,14 +16,14 @@ Config {
   , commands =
 
         -- Network activiy for primarily interface
-        [ Run Network "<IF-1>" [ "-L", "1000"
+        [ Run Network "<IF-1>" [ "-L", "0"
                                , "-H", "2000000"
                                , "--normal", "#00c500"   -- lightgreen
                                , "--high", "#cc0000"     -- red
                                ] 10
 
         -- Network activiy for second interface
-        , Run Network "eth1"   [ "-L", "1000"
+        , Run Network "eth1"   [ "-L", "0"
                                , "-H", "2000000"
                                , "--normal", "#00c500"   -- lightgreen
                                , "--high", "#cc0000"     -- red
