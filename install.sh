@@ -169,7 +169,7 @@ function configure_neovim () {
 function configure_xmobar () {
   local current_dir="$1"
   local top_xmobar="xmobar/top.hs"
-  local interface="$(ip addr | grep '[0-9]: .*: ' | cut -d ' ' -f2 | cut -d ':' -f1 | grep -v "lo")"
+  local interface="$(ip addr | grep '[0-9]: .*: ' | cut -d ' ' -f2 | cut -d ':' -f1 | grep -v -E "lo|docker")"
   update_file "${top_xmobar}" "<IF-1>" "${interface}"
   update_file "${top_xmobar}" "<XMOBAR-DIR>" "$HOME/.xmobar"
   update_file "xmobar/scripts/battery.sh" "<XMOBAR-DIR>" "$HOME/.xmobar"
