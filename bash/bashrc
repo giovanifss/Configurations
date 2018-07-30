@@ -1,0 +1,73 @@
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
+
+# Aliases
+alias ls='ls --color=auto'
+alias ll='ls -l'
+alias la='ls -a'
+alias lla='ls -al'
+alias cd..='cd ..'
+alias l='ls'
+alias s='ls'
+alias lls='ls'
+alias stop='sudo systemctl stop'
+alias start='sudo systemctl start'
+alias status='sudo systemctl status'
+alias disable='sudo systemctl disable'
+alias enable='sudo systemctl enable'
+alias restart='sudo systemctl restart'
+alias msfconsole="start postgresql && msfconsole --quiet"
+alias pacman="sudo pacman"
+alias open="nautilus"
+alias mingw32="/opt/mingw32/bin/i686-w64-mingw32-gcc"
+alias mingw64="/opt/mingw64/bin/x86_64-w64-mingw32-gcc"
+alias quit='exit'
+alias json-format='python -m json.tool'
+alias json-look="jq -C '.'"
+alias rogerthat="audacious -Hq $HOME/Music/system-ready.ogg &>/dev/null"
+
+# Add RVM to PATH for scripting and Laravel framework for php
+export PATH="$PATH:$HOME/.rvm/bin:$HOME/.config/composer/vendor/bin"
+
+# PS1
+if [ "$(tty)" == "/dev/pts/0" ]; then
+    MAIN='\e[1;32m\]'                   # Bold Green
+else
+    MAIN='\e[1;33m\]'                   # Bold Blue
+fi
+
+RED='\e[1;31m\]'
+NC='\e[0m\]'
+WHITE='\e[1;37m\]'
+
+# Reset collor text to defaul
+trap 'tput sgr0' DEBUG
+
+PS1="\`if [ \$? = 0 ]; then echo '\[$MAIN(OK)\[$NC'; else echo '\[$RED(BAD)\[$NC'; fi\` \[$WHITE\u@\h \[$MAIN[\w]\[$WHITE\n(\!)\[$MAIN $ "
+# PS1="\`if [ \$? = 0 ]; then echo \[\e[1\;32m\]\(OK\)\[\e[0m\]; else echo \[\e[1\;31m\]\(BAD\)\[\e[0m\]; fi\` \e[1;37m\]\u@\h\n(\!) $ \e[1;32m\]"
+# PS1="\`if [ \$? != 0 ]; then echo \\[\e[1\;31m\]\(!!\) \\[\e[0m\]; fi\`\u@\h:\W $ "
+# trap 'printf "\e[0m" "$_"' DEBUG
+
+export VISUAL=vim
+export EDITOR="$VISUAL"
+
+export HISTCONTROL=ignoreboth:erasedups
+# export HISTSIZE=200
+# export HISTFILESIZE=500
+export HISTIGNORE="pwd:cd:ls:exit"
+
+# Wait for signal before executing history commands
+shopt -s histverify
+
+# Rvm avilability
+[[ -s "/usr/local/rvm/scripts/rvm" ]] && source "/usr/local/rvm/scripts/rvm"
+
+# RVM bash completion
+[[ -r "/usr/local/rvm/scripts/completion" ]] && source "/usr/local/rvm/scripts/completion"
+
+# The fuck
+eval $(thefuck --alias)
+
+# Ruby gems
+PATH="$(ruby -e "print Gem.user_dir")/bin:$PATH"
+export GEM_HOME=$(ruby -e 'print Gem.user_dir')

@@ -5,6 +5,7 @@
 #--------------------------------------------------------------------
 PROJECTS=""
 ZSH=true
+BASH=true
 UDEV=true
 XMONAD=true
 XMOBAR=true
@@ -32,6 +33,9 @@ function parse_args(){
 
       --no-zsh)
         ZSH=false;;
+
+      --no-bash)
+        BASH=false;;
 
       --no-udev)
         UDEV=false;;
@@ -93,6 +97,7 @@ function display_help(){
     echo -e "\t-p, --projects-dir\t\tfull path to projects directory"
     echo -e "\t--no-lightdm\t\t\tdo not install lightdm configurations"
     echo -e "\t--no-zsh\t\t\tdo not install zsh configurations"
+    echo -e "\t--no-bash\t\t\tdo not install bash configurations"
     echo -e "\t--no-xmonad\t\t\tdo not install xmonad configurations"
     echo -e "\t--no-xmobar\t\t\tdo not install xmobar configurations"
     echo -e "\t--no-terminator\t\t\tdo not install terminator configurations"
@@ -246,6 +251,7 @@ function main () {
   setup "$ALACRITTY" "${pwd}" "alacritty" "$HOME/.config/alacritty"     # Setup symlink for termite
   setup "$WALLPAPERS" "${pwd}" "wallpapers" "$HOME/.config/wallpapers"  # Setup symlink for wallpapers
   setup "$ZSH" "${pwd}" "zsh/zshrc" "$HOME/.zshrc" &&                   # Setup symlink for zsh
+  setup "$BASH" "${pwd}" "bash/bashrc" "$HOME/.bashrc" &&               # Setup symlink for bash
     configure_zsh "${pwd}"                                              # Configure zsh
   setup "$XMOBAR" "${pwd}" "xmobar" "$HOME/.xmobar" &&                  # Setup symlink for xmobar
     configure_xmobar "${pwd}"                                           # Configure xmobar
