@@ -237,6 +237,16 @@ function setup_lightdm () {
   setup_lightdm_cfg "${current_dir}"
 }
 
+function setup_if_installed () {
+  local program="$1"
+  local install_flag="$2"
+  local current_dir="$3"
+  local config_path="$4"
+  local config_dst="$5"
+  command -v "${program}" 2>&1 > /dev/null && \
+    setup "${install_flag}" "${current_dir}" "${config_path}" "${config_dst}"
+}
+
 #--------------------------------------------------------------------
 # Main function and script pre-execution preparation
 #--------------------------------------------------------------------
@@ -245,18 +255,25 @@ function main () {
   pwd="$(pwd)"
 
   setup "$XPROFILE" "${pwd}" "xorg/xprofile" "$HOME/.xprofile"          # Setup symlink for xprofile
-  setup "$URXVT" "${pwd}" "urxvt/urxvt.conf" "$HOME/.Xdefaults"         # Setup symlink for urxvt
-  setup "$TERMINATOR" "${pwd}" "terminator" "$HOME/.config/terminator"  # Setup symlink for terminator
-  setup "$TERMITE" "${pwd}" "termite" "$HOME/.config/termite"           # Setup symlink for termite
-  setup "$ALACRITTY" "${pwd}" "alacritty" "$HOME/.config/alacritty"     # Setup symlink for termite
   setup "$WALLPAPERS" "${pwd}" "wallpapers" "$HOME/.config/wallpapers"  # Setup symlink for wallpapers
-  setup "$ZSH" "${pwd}" "zsh/zshrc" "$HOME/.zshrc" &&                   # Setup symlink for zsh
-  setup "$BASH" "${pwd}" "bash/bashrc" "$HOME/.bashrc" &&               # Setup symlink for bash
-    configure_zsh "${pwd}"                                              # Configure zsh
-  setup "$XMOBAR" "${pwd}" "xmobar" "$HOME/.xmobar" &&                  # Setup symlink for xmobar
-    configure_xmobar "${pwd}"                                           # Configure xmobar
-  setup "$NEOVIM" "${pwd}" "nvim" "$HOME/.config/nvim" &&               # Setup symlink for neovim
-    configure_neovim                                                    # Configure neovim
+
+  setup_if_installed "urxvt" "$URXVT" "${pwd}" "urxvt/urxvt.conf" \
+    "$HOME/.Xdefaults"                                                  # Setup symlink for urxvt
+  setup_if_installed "terminator" "$TERMINATOR" "${pwd}" "terminator" \
+    "$HOME/.config/terminator"                                          # Setup symlink for terminator
+  setup_if_installed "termite" "$TERMITE" "${pwd}" "termite" \
+    "$HOME/.config/termite"                                             # Setup symlink for termite
+  setup_if_installed "alacritty" "$ALACRITTY" "${pwd}" "alacritty" \
+    "$HOME/.config/alacritty"                                           # Setup symlink for alacritty
+  setup_if_installed "bash" "$BASH" "${pwd}" "bash/bashrc" \
+    "$HOME/.bashrc"                                                     # Setup symlink for bash
+  setup_if_installed "zsh" "$ZSH" "${pwd}" "zsh/zshrc" \
+    "$HOME/.zshrc" && configure_zsh "${pwd}"                            # Setup symlink for zsh
+  setup_if_installed "xmobar" "$XMOBAR" "${pwd}" "xmobar" \
+    "$HOME/.xmobar" && configure_xmobar "${pwd}"                        # Setup symlink for xmobar
+  setup_if_installed "nvim" "$NEOVIM" "${pwd}" "nvim" \
+    "$HOME/.config/nvim" && configure_neovim                            # Setup symlink for neovim
+
   [ "$XMONAD" == true ] && setup_xmonad "${pwd}"                        # Setup xmonad
   [ "$LIGHTDM" == true ] && setup_lightdm "${pwd}"                      # Setup lightdm
   [ "$UDEV" == true ] && setup_udev_rules "${pwd}"                      # Setup udev rules
