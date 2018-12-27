@@ -1,0 +1,6 @@
+. /etc/ksh.kshrc
+
+PS1="\$(if [ \$? = 0 ]; then echo '(OK)'; else echo '[BAD]'; fi) \u@\h [\w]\n(\!) $ "
+bind -m '^L'=^U\ clear'^J^Y'
+export LC_ALL=C.UTF-8
+export LANG=C.UTF-8
