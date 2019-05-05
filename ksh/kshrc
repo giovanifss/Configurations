@@ -1,6 +1,48 @@
 . /etc/ksh.kshrc
 
-PS1="\$(if [ \$? = 0 ]; then echo '(OK)'; else echo '[BAD]'; fi) \u@\h [\w]\n(\!) $ "
+# =========================
+#     Binds and Aliases
+# =========================
 bind -m '^L'=^U\ clear'^J^Y'
+
+
+# =========================
+#     Variables Exports
+# =========================
 export LC_ALL=C.UTF-8
 export LANG=C.UTF-8
+export VISUAL=/usr/bin/vi
+
+
+# =========================
+#     PS1 Configuration
+# =========================
+function set_spaces {
+	lps1_status=$(get_status | wc -c)
+	lps1_user=$(( $(echo $USER | wc -c) - 1 ))
+	lps1_host=$(( $(hostname -s | wc -c) - 1 ))
+	lps1_dir=$(( $(pwd | sed "s|^$HOME|~|" | wc -c) - 1 ))
+	lps1_fixed_chars=5
+	lps1=$(( $lps1_status + $lps1_user + $lps1_host + lps1_dir + lps1_fixed_chars ))
+	rps1=$(( $(date "+%a %b %e - %H:%M:%S" | wc -c) - 1 ))
+	spaces=$(( $COLUMNS - $lps1 - $rps1 ))
+	printf %"$spaces"s
+}
+
+function get_status {
+	if [ $? = 0 ]; then
+		printf '(OK)'
+	else
+		printf '[BAD]'
+	fi
+}
+
+function LPS1 {
+	echo "$(get_status)"' \u@\h [\w]'
+}
+
+function RPS1 {
+	echo '\d - \\t'
+}
+
+PS1="\$(LPS1)\$(set_spaces)\$(RPS1)\n(\!) $ "
