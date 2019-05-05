@@ -1,5 +1,5 @@
 #!/bin/sh
 
-xinput set-button-map 7 1 2 3 5 4 7 6
+# xinput set-button-map 7 1 2 3 5 4 7 6
 xsetroot -solid black
 exec xmonad

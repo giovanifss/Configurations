@@ -106,7 +106,6 @@ setup_wsconsctl () {
 
 main () {
 	setup_ksh
-	setup_doas
 	setup_wsconsctl
 }
 
