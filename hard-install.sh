@@ -94,13 +94,13 @@ setup_ksh () {
 
 setup_doas () {
 	echo "-> Copying doas configuration"
-	write_config "${CONFIG_DIR}/doas/conf" "/etc/doas.conf"
+	write_config "${CONFIG_DIR}/doas/doas.conf" "/etc/doas.conf"
 	echo "[+] Copied doas configuration"
 }
 
 setup_wsconsctl () {
 	echo "-> Copying wsconsctl configuration"
-	write_config "${CONFIG_DIR}/wsconsctl/conf" "/etc/wsconsctl.conf"
+	write_config "${CONFIG_DIR}/wsconsctl/wsconsctl.conf" "/etc/wsconsctl.conf"
 	echo "[+] Copied wsconsctl configuration"
 }
 
