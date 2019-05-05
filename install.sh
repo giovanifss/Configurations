@@ -9,10 +9,7 @@ BASH=true
 UDEV=true
 XMONAD=true
 XMOBAR=true
-TERMINATOR=true
-TERMITE=true
 ALACRITTY=true
-URXVT=true
 XPROFILE=true
 NEOVIM=true
 LIGHTDM=true
@@ -46,17 +43,8 @@ function parse_args(){
       --no-xmobar)
         XMOBAR=false;;
 
-      --no-terminator)
-        TERMINATOR=false;;
-
-      --no-termite)
-        TERMITE=false;;
-
       --no-alacritty)
         ALACRITTY=false;;
-
-      --no-urxvt)
-        URXVT=false;;
 
       --no-xprofile)
         XPROFILE=false;;
@@ -100,11 +88,8 @@ function display_help(){
     echo -e "\t--no-bash\t\t\tdo not install bash configurations"
     echo -e "\t--no-xmonad\t\t\tdo not install xmonad configurations"
     echo -e "\t--no-xmobar\t\t\tdo not install xmobar configurations"
-    echo -e "\t--no-terminator\t\t\tdo not install terminator configurations"
-    echo -e "\t--no-termite\t\t\tdo not install termite configurations"
     echo -e "\t--no-alacritty\t\t\tdo not install alacritty configurations"
     echo -e "\t--no-neovim\t\t\tdo not install neovim configurations"
-    echo -e "\t--no-urxvt\t\t\tdo not create Xdefaults"
     echo -e "\t--no-xprofile\t\t\tdo not create xprofile"
     echo -e "\t--no-wallpapers\t\t\tdo not create wallpapers folder"
     echo -e "\t--no-udev\t\t\tdo not install udev configurations"
@@ -257,12 +242,6 @@ function main () {
   setup "$XPROFILE" "${pwd}" "xorg/xprofile" "$HOME/.xprofile"          # Setup symlink for xprofile
   setup "$WALLPAPERS" "${pwd}" "wallpapers" "$HOME/.config/wallpapers"  # Setup symlink for wallpapers
 
-  setup_if_installed "urxvt" "$URXVT" "${pwd}" "urxvt/urxvt.conf" \
-    "$HOME/.Xdefaults"                                                  # Setup symlink for urxvt
-  setup_if_installed "terminator" "$TERMINATOR" "${pwd}" "terminator" \
-    "$HOME/.config/terminator"                                          # Setup symlink for terminator
-  setup_if_installed "termite" "$TERMITE" "${pwd}" "termite" \
-    "$HOME/.config/termite"                                             # Setup symlink for termite
   setup_if_installed "alacritty" "$ALACRITTY" "${pwd}" "alacritty" \
     "$HOME/.config/alacritty"                                           # Setup symlink for alacritty
   setup_if_installed "bash" "$BASH" "${pwd}" "bash/bashrc" \
