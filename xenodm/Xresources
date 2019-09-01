@@ -1,0 +1,45 @@
+xlogin.Login.translations: #override \
+	<Key>F1: set-session-argument(failsafe) finish-field()\n\
+	<Key>Left: move-backward-character()\n\
+	<Key>Right: move-forward-character()\n\
+	<Key>Home: move-to-begining()\n\
+	<Key>End: move-to-end()\n\
+	Ctrl<Key>KP_Enter: set-session-argument(failsafe) finish-field()\n\
+	<Key>KP_Enter: set-session-argument() finish-field()\n\
+	Ctrl<Key>Return: set-session-argument(failsafe) finish-field()\n\
+	<Key>Return: set-session-argument() finish-field()
+
+xlogin.Login.face: DejaVu Sans Condensed-16:dpi=75
+xlogin.Login.font: -adobe-helvetica-medium-r-normal--18-180-75-75-p-98-iso8859-1
+
+xlogin.Login.failFace: DejaVu Sans Condensed-16:bold:dpi=75
+xlogin.Login.failFont: -adobe-helvetica-bold-r-normal--18-180-75-75-p-103-iso8859-1
+
+xlogin.Login.greetFace: DejaVu Sans Condensed-22:bold:italic:dpi=75
+xlogin.Login.greetFont: -adobe-helvetica-bold-o-normal--24-240-75-75-p-138-iso8859-1
+
+xlogin.Login.promptFace: DejaVu Sans Condensed-16:bold:dpi=75
+xlogin.Login.promptFont: -adobe-helvetica-bold-r-normal--18-180-75-75-p-103-iso8859-1
+
+xlogin.Login.width: 500
+xlogin.Login.height: 170
+
+xlogin.Login.sepWidth: 0
+xlogin.Login.frameWidth: 0
+xlogin.Login.innerFramesWidth: 0
+
+xlogin.Login.fail: Access Denied
+xlogin.Login.greeting:
+xlogin.Login.echoPasswd: true
+xlogin.Login.namePrompt: \040\040\040\040login\040
+xlogin.Login.passwdPrompt: passwd\040
+
+xlogin.Login.inpColor: black
+xlogin.Login.failColor: red
+xlogin.Login.background: black
+xlogin.Login.foreground: #eeeeee
+xlogin.Login.promptColor: #eeeeec
+
+xlogin.Login.useShape: true
+xlogin.Login.logoPadding: 0
+xlogin.Login.logoFileName: /etc/X11/xenodm/pixmaps/OpenBSD_15bpp.xpm
